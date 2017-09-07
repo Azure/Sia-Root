@@ -15,11 +15,11 @@ Software systems are only as effective as they are reliable. As online services 
 The SRE Incident Assistant (SIA) is designed to facilitate coordination, communication, and mitigation activities in 'worst case scenario' outages while gathering data for use in postmortem and process improvement.
 
 # Quick Start
-* [Install prerequisites](https://github.com/Azure/Sia-Root/How-to-Contribute#installing-prerequisites)
+* [Install prerequisites](https://github.com/Azure/Sia-Root/blob/master/HOWTOCONTRIBUTE.md#installing-prerequisites)
 * Clone the repos:
   * Gateway: git clone [https://github.com/Azure/Sia-Gateway](https://github.com/Azure/Sia-Gateway)
   * UI: git clone [https://github.com/Azure/sia-ui](https://github.com/Azure/sia-ui)
-* Update the [configurations](https://github.com/Azure/Sia-Root/How-to-Contribute#development-workflow)
+* Update the [configurations](https://github.com/Azure/Sia-Root/blob/master/HOWTOCONTRIBUTE.md#development-workflow)
 * Launch Gateway form VS2017 or VS Code
 * Start UI with npm: npm start
 * Open [http://localhost:3000](http://localhost:3000) in your browser, and voilà
@@ -27,12 +27,12 @@ The SRE Incident Assistant (SIA) is designed to facilitate coordination, communi
 ## Contributing
 
 If you are interested in fixing issues and contributing directly to the code base, please see the document How to Contribute, which covers the following:
-* [Build and Run from Source](https://github.com/Azure/Sia-Root/How-to-Contribute##build)
-* [The development workflow, including debugging and running tests](https://github.com/Azure/Sia-Root/How-to-Contribute##debugging)
-* [Coding guidelines](https://github.com/Azure/Sia-Root/How-to-Contribute##work-branches)
-* [Submitting pull requests](https://github.com/Azure/Sia-Root/How-to-Contribute##where-to-contribute)
+* [Build and Run from Source](https://github.com/Azure/Sia-Root/blob/master/HOWTOCONTRIBUTE.md#build)
+* [The development workflow, including debugging and running tests](https://github.com/Azure/Sia-Root/blob/master/HOWTOCONTRIBUTE.md#debugging)
+* [Coding guidelines](https://github.com/Azure/Sia-Root/blob/master/HOWTOCONTRIBUTE.md#work-branches)
+* [Submitting pull requests](https://github.com/Azure/Sia-Root/blob/master/HOWTOCONTRIBUTE.md#pull-requests)
 
-Please see also our [Code of Conduct]((https://github.com/Azure/Sia-Root/Code-of-Conduct).
+Please see also our [Code of Conduct]((https://github.com/Azure/Sia-Root/blob/master/CODEOFCONDUCT.md).
 
 ## Feedback
 * Request a new feature on [GitHub](CONTRIBUTING.md)
