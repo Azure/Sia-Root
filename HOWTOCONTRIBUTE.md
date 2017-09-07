@@ -10,10 +10,10 @@ You'll need…
 * [Visual Studio 2017 or VSCode](https://www.visualstudio.com/downloads/) 
 * [.Net Core SDK](https://www.microsoft.com/net/download/core)
 * [An Azure Subscription](https://azure.microsoft.com/en-us/pricing/purchase-options/) with:
- * [A Key Vault instance](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
- * [An Application Insights instance](https://docs.microsoft.com/en-us/azure/application-insights/app-insights-create-new-resource)
- * [2 Azure Active Directory App Registrations](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications), 1 for the Gateway and 1 for EventUI.
- * [2 Azure App Services](https://docs.microsoft.com/en-us/azure/app-service-web/), 1 for the Gateway and 1 for EventUI. This is not needed for development if you run on a local machine.
+    * [A Key Vault instance](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
+    * [An Application Insights instance](https://docs.microsoft.com/en-us/azure/application-insights/app-insights-create-new-resource)
+    * [2 Azure Active Directory App Registrations](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications), 1 for the Gateway and 1 for EventUI.
+    * [2 Azure App Services](https://docs.microsoft.com/en-us/azure/app-service-web/), 1 for the Gateway and 1 for EventUI. This is not needed for development if you run on a local machine.
 
 # Development Workflow
 ## Configurations
@@ -37,7 +37,7 @@ Open http://localhost:3000 in your browser
 __Repository__ | __Test framework(s)__ | __How to run tests__ | __Location of test code__
 -|-|-|-
 Gateway | MSTest in Visual Studio 2017 | See [Test Explorer documentation](https://docs.microsoft.com/en-us/visualstudio/test/run-unit-tests-with-test-explorer#BKMK_Run_tests_in_Test_Explorer) for information on running tests with text explorer in Visual Studio 2017 | Test code projects are in test directory
-EventUI | using Webpack to transpile a test bundle and run Mocha tests | Run 'npm test' using npm command prompt from project root directory | Test source files are in test directory; transpiled test code is run from temp/testBundle.js
+EventUI | Using Webpack to transpile a test bundle and run Mocha tests | Run 'npm test' using npm command prompt from project root directory | Test source files are in test directory; transpiled test code is run from temp/testBundle.js
 
 # Work Branches
 Even if you have push rights on the Azure/SIA repository, you should create a personal fork and create feature branches there when you need them. This keeps the main repository clean and your personal workflow cruft out of sight.
