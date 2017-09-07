@@ -32,7 +32,7 @@ If you are interested in fixing issues and contributing directly to the code bas
 * [Coding guidelines](https://github.com/Azure/Sia-Root/blob/master/HOWTOCONTRIBUTE.md#work-branches)
 * [Submitting pull requests](https://github.com/Azure/Sia-Root/blob/master/HOWTOCONTRIBUTE.md#pull-requests)
 
-Please see also our [Code of Conduct]((https://github.com/Azure/Sia-Root/blob/master/CODEOFCONDUCT.md).
+Please see also our [Code of Conduct](https://github.com/Azure/Sia-Root/blob/master/CODEOFCONDUCT.md).
 
 ## Feedback
 * Request a new feature on [GitHub](CONTRIBUTING.md)
