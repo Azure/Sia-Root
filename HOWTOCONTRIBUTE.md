@@ -9,6 +9,11 @@ You'll need…
 * [NodeJs](https://nodejs.org/en/download/)
 * [Visual Studio 2017 or VSCode](https://www.visualstudio.com/downloads/) 
 * [.Net Core SDK](https://www.microsoft.com/net/download/core)
+* [An Azure Subscription](https://azure.microsoft.com/en-us/pricing/purchase-options/) with:
+ * [A Key Vault instance](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
+ * [An Application Insights instance](https://docs.microsoft.com/en-us/azure/application-insights/app-insights-create-new-resource)
+ * [2 Azure Active Directory App Registrations](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications), 1 for the Gateway and 1 for EventUI.
+ * [2 Azure App Services](https://docs.microsoft.com/en-us/azure/app-service-web/), 1 for the Gateway and 1 for EventUI. This is not needed for development if you run on a local machine.
 
 # Development Workflow
 ## Configurations
