@@ -9,6 +9,7 @@ You'll need…
 * [NodeJs](https://nodejs.org/en/download/)
 * [Visual Studio 2017 or VSCode](https://www.visualstudio.com/downloads/) 
 * [.Net Core SDK](https://www.microsoft.com/net/download/core)
+* [.Net Core Runtime](https://www.microsoft.com/net/download/core#/runtime) (if version of the runtime shipped with the SDK is not working)
 * [An Azure Subscription](https://azure.microsoft.com/en-us/pricing/purchase-options/) with:
     * [A Key Vault instance](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
     * [An Application Insights instance](https://docs.microsoft.com/en-us/azure/application-insights/app-insights-create-new-resource)
