@@ -18,7 +18,7 @@ The SRE Incident Assistant (SIA) is designed to facilitate coordination, communi
 * [Install prerequisites](https://github.com/Azure/Sia-Root/blob/master/HOWTOCONTRIBUTE.md#installing-prerequisites)
 * Clone the repos:
   * Gateway: git clone [https://github.com/Azure/Sia-Gateway](https://github.com/Azure/Sia-Gateway)
-  * UI: git clone [https://github.com/Azure/sia-ui](https://github.com/Azure/sia-ui)
+  * UI: git clone [https://github.com/Azure/Sia-EventUi](https://github.com/Azure/Sia-EventUi)
 * Update the [configurations](https://github.com/Azure/Sia-Root/blob/master/HOWTOCONTRIBUTE.md#development-workflow)
 * Launch Gateway form VS2017 or VS Code
 * Start UI with npm: npm start
