@@ -5,19 +5,29 @@ After cloning and building the repo, check out the issues list.
 Issues labeled beginner are good candidates to pick up if you are in the code for the first time.
 
 # Installing Prerequisites
-You'll need…
+## You'll need…
+### For Development
 * [NodeJs](https://nodejs.org/en/download/)
 * [Visual Studio 2017 or VSCode](https://www.visualstudio.com/downloads/) 
 * [.Net Core SDK](https://www.microsoft.com/net/download/core)
 * [.Net Core Runtime](https://www.microsoft.com/net/download/core#/runtime) (if version of the runtime shipped with the SDK is not working)
+
+### For A Functional, Authenticated Environment
 * [An Azure Subscription](https://azure.microsoft.com/en-us/pricing/purchase-options/) with:
     * [A Key Vault instance](https://docs.microsoft.com/en-us/azure/key-vault/key-vault-get-started)
     * [An Application Insights instance](https://docs.microsoft.com/en-us/azure/application-insights/app-insights-create-new-resource)
     * [2 Azure Active Directory App Registrations](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-integrating-applications), 1 for the Gateway and 1 for EventUI.
-    * [2 Azure App Services](https://docs.microsoft.com/en-us/azure/app-service-web/), 1 for the Gateway and 1 for EventUI. This is not needed for development if you run on a local machine.
+    * [2 Azure App Services](https://docs.microsoft.com/en-us/azure/app-service-web/), 1 for the Gateway and 1 for EventUI. 
 
 # Development Workflow
 ## Configurations
+### For Development
+* Follow instructions in the README.md files in each of the child repositories.
+   * [Sia-Gateway](https://github.com/Azure/Sia-Gateway/blob/master/src/Sia.Gateway/README.md)
+   * [Sia-EventUi](https://github.com/Azure/Sia-EventUI/blob/master/README.md)
+   
+### For A Functional, Authenticated Environment
+//Todo: Instructions for configuring Azure resources
 
 ## Build
 Launch Gateway from VS2017 or VS Code
