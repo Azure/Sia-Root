@@ -1,7 +1,11 @@
+# installing rerequisites and cloning repos for SIA-EventUI
+
+# all bits are x64 version unless specified
 $nodejsUrl = "https://nodejs.org/dist/v6.11.3/node-v6.11.3-x64.msi"
 $dotnetCoreSDKUrl = "https://download.microsoft.com/download/0/F/D/0FD852A4-7EA1-4E2A-983A-0484AC19B92C/dotnet-sdk-2.0.0-win-x64.exe"
 $dotnetCoreRuntimeUrl = "https://download.microsoft.com/download/5/6/B/56BFEF92-9045-4414-970C-AB31E0FC07EC/dotnet-runtime-2.0.0-win-x64.exe"
 
+# registry key check to see if rerequisites are already installed
 $nodejsRegKeyCheck = Get-ItemProperty 'HKLM:\SOFTWARE\Node.js' -ErrorAction SilentlyContinue
 $dotnetCoreSDKRegKeyCheck = Get-ItemProperty 'HKLM:\SOFTWARE\dotnet\Setup\InstalledVersions\x64\sharedhost' -ErrorAction SilentlyContinue
 $dotnetCoreRuntimeRegKeyCheck = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\ASP.NET Core\Runtime Package Store\v2.0\RTM' -ErrorAction SilentlyContinue
@@ -15,7 +19,7 @@ function CheckIfElevated()
       $IsAdmin=$prp.IsInRole($adm)
       if ($IsAdmin)
       {
-        Write-Host "Verified - PowerShell is running in Admin mode"       
+        Write-Host "Verified - PowerShell is running in Admin mode"
         return $true
       }
       else
@@ -32,7 +36,7 @@ function CheckIfUnrestricted()
       Write-Host "Checking if PowerShell is running with Unrestricted execution policy..."
       $executionPolicy = Get-ExecutionPolicy
       if($executionPolicy -eq "Unrestricted") {
-        Write-Host "Verified - PowerShell Execution Policy is set to Unrestricted"       
+        Write-Host "Verified - PowerShell Execution Policy is set to Unrestricted"
         return $true
       }
       else {
@@ -77,12 +81,7 @@ function invoke-download(){
 	}
 }
 
-if(!(CheckIfElevated))
-{
-  exit
-}
-
-if(!(CheckIfUnrestricted))
+if(!(CheckIfElevated) -or !(CheckIfUnrestricted))
 {
   exit
 }
@@ -113,3 +112,23 @@ else {
     Write-Output "Downloading and installing Dotnet Core Runtime"
     invoke-download($dotnetCoreRuntimeUrl) ("DotnetCoreRuntime")
 }
+
+# assuming the script is running from Sia-Root directory
+# moving up one level above and going back to reposDir
+$reposDir = Split-Path (Get-Location).Path
+Push-Location $reposDir
+
+if (Test-Path Sia-EventUI) {
+    Write-Output "Removing existing Sia-EventUI folder..."
+    Remove-Item Sia-EventUI -Recurse -Force -ErrorAction Ignore
+}
+
+git clone https://github.com/Azure/Sia-EventUI.git
+Push-Location Sia-EventUI
+
+npm install
+
+Copy-Item cfg\constExample.js cfg\localhost.const.js -Recurse -Force
+
+Write-Output "`nSIA-EventUI is now installed with the rerequisites and cloned with the repos."
+Write-Output "You may now start the UI with 'npm start', and then open http://localhost:3000 in your browser.`n"
