@@ -143,10 +143,12 @@ else {
 Push-Location Sia-EventUI
 
 #npm install @aspnet/signalr-client
+Write-Output "Executing npm install for dependencies..."
 npm install
 
 # creating localhost.const from constExample.js as part of the requirements
-Copy-Item cfg\constExample.js cfg\localhost.const.js -Recurse -Force
+Write-Output "Copying the required config file: localhost.const.js..."
+Copy-Item cfg\exampleConstants.js cfg\localhost.const.js -Recurse -Force
 
 Write-Output "`nSIA-EventUI is now installed successfully with the prerequisites and source files."
 Write-Output "You may now start the UI with 'npm start', and then open http://localhost:3000 in your browser.`n"
