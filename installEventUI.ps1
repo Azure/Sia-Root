@@ -1,14 +1,30 @@
-# installing rerequisites and cloning repos for SIA-EventUI
+# installing prerequisites and cloning source codes for SIA-EventUI on Windows PC
 
-# all bits are x64 version unless specified
-$nodejsUrl = "https://nodejs.org/dist/v6.11.3/node-v6.11.3-x64.msi"
-$dotnetCoreSDKUrl = "https://download.microsoft.com/download/0/F/D/0FD852A4-7EA1-4E2A-983A-0484AC19B92C/dotnet-sdk-2.0.0-win-x64.exe"
-$dotnetCoreRuntimeUrl = "https://download.microsoft.com/download/5/6/B/56BFEF92-9045-4414-970C-AB31E0FC07EC/dotnet-runtime-2.0.0-win-x64.exe"
+# checking registry key to see if any prerequisites is already installed
+# all bits are x64 Windows PC versions unless specified
+$gitHash = @{
+    name = "Git"
+    url = "https://github.com/git-for-windows/git/releases/download/v2.14.2.windows.1/Git-2.14.2-64-bit.exe"
+    regKeyCheck = "Get-ItemProperty 'HKLM:\SOFTWARE\GitForWindows' -ErrorAction SilentlyContinue"
+}
+$nodeHash = @{
+    name = "Node.js"
+    url = "https://nodejs.org/dist/v6.11.3/node-v6.11.3-x64.msi"
+    regKeyCheck = "Get-ItemProperty 'HKLM:\SOFTWARE\Node.js' -ErrorAction SilentlyContinue"
+}
+$dotnetCoreSDKHash = @{
+    name = "dotnetCoreSDK"
+    url = "https://download.microsoft.com/download/0/F/D/0FD852A4-7EA1-4E2A-983A-0484AC19B92C/dotnet-sdk-2.0.0-win-x64.exe"
+    regKeyCheck = "Get-ItemProperty 'HKLM:\SOFTWARE\dotnet\Setup\InstalledVersions\x64\sharedhost' -ErrorAction SilentlyContinue"
+}
+$dotnetCoreRuntimeHash = @{
+    name = "dotnetCoreRuntime"
+    url = "https://download.microsoft.com/download/5/6/B/56BFEF92-9045-4414-970C-AB31E0FC07EC/dotnet-runtime-2.0.0-win-x64.exe"
+    regKeyCheck = "Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\ASP.NET Core\Runtime Package Store\v2.0\RTM' -ErrorAction SilentlyContinue"
+}
 
-# registry key check to see if rerequisites are already installed
-$nodejsRegKeyCheck = Get-ItemProperty 'HKLM:\SOFTWARE\Node.js' -ErrorAction SilentlyContinue
-$dotnetCoreSDKRegKeyCheck = Get-ItemProperty 'HKLM:\SOFTWARE\dotnet\Setup\InstalledVersions\x64\sharedhost' -ErrorAction SilentlyContinue
-$dotnetCoreRuntimeRegKeyCheck = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\ASP.NET Core\Runtime Package Store\v2.0\RTM' -ErrorAction SilentlyContinue
+# puttig all hash into a single array for looping actions later
+$prereqArr = $gitHash, $nodeHash, $dotnetCoreSDKHash, $dotnetCoreRuntimeHash
 
 function CheckIfElevated()
 {
@@ -24,7 +40,7 @@ function CheckIfElevated()
       }
       else
       {
-        Write-Host "You are not running PowerShell with elevated permissions. Please re-launch Powershell in Administrator mode and run this script." -ForegroundColor Yellow
+        Write-Host "You are not running PowerShell with elevated permissions. Please re-launch Powershell in Administrator mode and run the script again." -ForegroundColor Yellow
         Write-Host "Press any key to exit..."
         $In = Read-Host
         return $false
@@ -40,7 +56,7 @@ function CheckIfUnrestricted()
         return $true
       }
       else {
-        Write-Host "You are not running PowerShell with elevated permissions. Please re-launch Powershell after executing the command 'set-executionpolicy unrestricted' " -ForegroundColor Yellow
+        Write-Host "You are not running PowerShell with elevated permissions. Please re-launch Powershell after executing the command: `nset-executionpolicy unrestricted " -ForegroundColor Yellow
         Write-Host "Press any key to exit..."
         $In = Read-Host
         return $false
@@ -86,49 +102,51 @@ if(!(CheckIfElevated) -or !(CheckIfUnrestricted))
   exit
 }
 
-Write-Host "Checking if Node.js is installed..."
-if($nodejsRegKeyCheck) {
-    Write-Output "Node.js is already installed. Skipping installation..."
-}
-else {
-    Write-Output "Downloading and installing Node.js"
-    invoke-download($nodejsUrl) ("Node.js")
-}
-
-Write-Host "Checking if Dotnet Core SDK is installed..."
-if($dotnetCoreSDKRegKeyCheck) {
-    Write-Output "Dotnet Core SDK is already installed. Skipping installation..."
-}
-else {
-    Write-Output "Downloading and installing Dotnet Core SDK"
-    invoke-download($dotnetCoreSDKUrl) ("DotnetCoreSDK")
+foreach ($prereq in $prereqArr) {
+    Write-Host "Checking if $($prereq.name) is installed..."
+    if(Invoke-Expression $prereq.regKeyCheck) {
+        Write-Output "$($prereq.name) is already installed. Skipping installation..."
+        
+    }
+    else {
+        Write-Output "Downloading and installing $($prereq.name)"
+        invoke-download($prereq.url) ($prereq.name)
+    }
 }
 
-Write-Host "Checking if Dotnet Core Runtime is installed..."
-if($dotnetCoreRuntimeRegKeyCheck) {
-    Write-Output "Dotnet Core Runtime is already installed. Skipping installation..."
-}
-else {
-    Write-Output "Downloading and installing Dotnet Core Runtime"
-    invoke-download($dotnetCoreRuntimeUrl) ("DotnetCoreRuntime")
-}
+# refreshing the PowerShell prompt after Node.js installation to avoid relaunching the prompt
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
 
-# assuming the script is running from Sia-Root directory
-# moving up one level above and going back to reposDir
-$reposDir = Split-Path (Get-Location).Path
-Push-Location $reposDir
+# checking if current working directory is under Sia-Root or Sia-EventUI
+# moving up one level above to go back to repos directory if needed
+if ((Get-Location).Path -match "Sia-Root" -or (Get-Location).Path -match "Sia-EventUI") {
+    $reposDir = Split-Path (Get-Location).Path
+    Write-Output "Moving up one directory level to $reposDir"
+    Push-Location $reposDir
+}
 
 if (Test-Path Sia-EventUI) {
-    Write-Output "Removing existing Sia-EventUI folder..."
-    Remove-Item Sia-EventUI -Recurse -Force -ErrorAction Ignore
+    $removeMsg = "Sia-EventUI folder already existed. `nEnter [Y] Yes to remove and then re-clone the folder. Or enter any other key to skip this step."
+    $removeResponse = Read-Host -Prompt $removeMsg
+    if (($removeResponse -eq "y") -or ($removeResponse -eq "yes")) {
+        Write-Output "Deleting existing Sia-EventUI folder..."
+        Remove-Item Sia-EventUI -Recurse -Force -ErrorAction Ignore
+        Write-Output "Cloning Sia-EventUI source code from GitHub again..."
+        git clone https://github.com/Azure/Sia-EventUI.git
+    }
+}
+else {
+    Write-Output "Sia-EventUI is not there. Cloning the source code from GitHub..."
+    git clone https://github.com/Azure/Sia-EventUI.git
 }
 
-git clone https://github.com/Azure/Sia-EventUI.git
 Push-Location Sia-EventUI
 
+#npm install @aspnet/signalr-client
 npm install
 
+# creating localhost.const from constExample.js as part of the requirements
 Copy-Item cfg\constExample.js cfg\localhost.const.js -Recurse -Force
 
-Write-Output "`nSIA-EventUI is now installed with the rerequisites and cloned with the repos."
+Write-Output "`nSIA-EventUI is now installed successfully with the prerequisites and source files."
 Write-Output "You may now start the UI with 'npm start', and then open http://localhost:3000 in your browser.`n"
