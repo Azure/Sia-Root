@@ -15,11 +15,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Sia.Shared" Version="1.1.0-alpha" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Sia.Domain\Sia.Domain.csproj" />
+    <ProjectReference Include="..\Sia.Shared\Sia.Shared.csproj" />
   </ItemGroup>
 
 </Project>
