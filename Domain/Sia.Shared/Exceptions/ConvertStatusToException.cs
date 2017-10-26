@@ -1,4 +1,4 @@
-﻿using Sia.Shared.Transactions;
+﻿using Sia.Shared.Protocol;
 using System;
 
 namespace Sia.Shared.Exceptions

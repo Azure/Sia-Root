@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Sia.Shared.Transactions
+namespace Sia.Shared.Protocol
 {
     public interface IResponse<T>
     {

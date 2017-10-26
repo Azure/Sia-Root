@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Sia.Shared.Transactions
+namespace Sia.Shared.Protocol
 {
     public class Response<T> : IResponse<T>
     {
