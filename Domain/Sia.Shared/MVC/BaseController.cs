@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Sia.Gateway.Authentication;
+using Sia.Shared.Authentication;
 using Sia.Shared.Validation.Filters;
 
-namespace Sia.Gateway.Controllers
+namespace Sia.Shared.Controllers
 {
     [Return400BadRequestWhenModelStateInvalid]
     [Authorize()]

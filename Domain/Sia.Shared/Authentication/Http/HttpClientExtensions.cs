@@ -1,5 +1,5 @@
 ﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Sia.Gateway.Authentication;
+using Sia.Shared.Authentication;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 

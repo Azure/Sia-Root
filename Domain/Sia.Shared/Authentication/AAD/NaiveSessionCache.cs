@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
-namespace Sia.Gateway.Authentication
+namespace Sia.Shared.Authentication
 {
     /// <summary>
     /// From https://github.com/Azure-Samples/active-directory-dotnet-webapp-webapi-openidconnect-aspnetcore/blob/master/WebApp-WebAPI-OpenIdConnect-DotNet/Utils/NaiveSessionCache.cs

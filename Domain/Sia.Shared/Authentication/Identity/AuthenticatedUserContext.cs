@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace Sia.Gateway.Authentication
+namespace Sia.Shared.Authentication
 {
     public class AuthenticatedUserContext
     {

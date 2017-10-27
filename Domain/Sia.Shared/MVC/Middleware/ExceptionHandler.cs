@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Sia.Shared.Exceptions;
 using System.Threading.Tasks;
 
-namespace Sia.Gateway.Middleware
+namespace Sia.Shared.Middleware
 {
     public class ExceptionHandler
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sia.Gateway.Authentication
+namespace Sia.Shared.Authentication
 {
     public class AzureActiveDirectoryAuthenticationInfo
     {
