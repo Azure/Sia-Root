@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
-namespace Sia.Playbook.Requests
+namespace Sia.Shared.Requests
 {
     public abstract class DatabaseOperationHandler<TContext, TRequest, TResult> : IAsyncRequestHandler<TRequest, TResult>
         where TRequest : IRequest<TResult>
