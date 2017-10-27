@@ -5,13 +5,11 @@ using System.Threading.Tasks;
 
 namespace Sia.Shared.Protocol
 {
-    public class Response<T> : IResponse<T>
+    public class Response<T> : Response, IResponse<T>
     {
-        public HttpStatusCode StatusCode { get; private set; }
-        public bool IsSuccessStatusCode { get; private set; }
-        public string Content { get; private set; }
         public T Value { get; private set; }
-        public static async Task<Response<T>> Create(HttpResponseMessage message)
+
+        public static new async Task<Response<T>> Create(HttpResponseMessage message)
         {
             var response = new Response<T>();
             response.IsSuccessStatusCode = message.IsSuccessStatusCode;
@@ -27,5 +25,19 @@ namespace Sia.Shared.Protocol
             }
             return response;
         }
+    }
+
+    public class Response : IResponse
+    {
+        public HttpStatusCode StatusCode { get; protected set; }
+        public bool IsSuccessStatusCode { get; protected set; }
+        public string Content { get; protected set; }
+        public static async Task<Response> Create(HttpResponseMessage message)
+            => new Response()
+            {
+                IsSuccessStatusCode = message.IsSuccessStatusCode,
+                StatusCode = message.StatusCode,
+                Content = await message.Content.ReadAsStringAsync()
+            };
     }
 }
