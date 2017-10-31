@@ -25,8 +25,9 @@ The SRE Incident Assistant (SIA) is designed to facilitate coordination, communi
   * git submodule init
   * git submodule update --remote
 * Update the [configurations](https://github.com/Azure/Sia-Root/blob/master/HOWTOCONTRIBUTE.md#development-workflow)
-* Launch Gateway form VS2017 or VS Code
-* Start UI with npm: npm start
+* Launch Gateway form Visual Studio 2017 or Visual Studio Code
+* Start UI with npm
+  * npm start
 * Open [http://localhost:3000](http://localhost:3000) in your browser, and voilà
   
 ## Contributing
