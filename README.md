@@ -1,3 +1,4 @@
+
 # SIA - SRE Incident Assistant
 
 SIA is a new incident management tool that reads from event sources and recommends courses of action that help mitigate incidents quickly.  SIA can read from nearly any event stream or ticketing system, and works with many live site response models. 
@@ -16,6 +17,7 @@ The SRE Incident Assistant (SIA) is designed to facilitate coordination, communi
 
 # Quick Start
 * [Install prerequisites](https://github.com/Azure/Sia-Root/blob/master/HOWTOCONTRIBUTE.md#installing-prerequisites)
+  * For Windows Users, the PowerShell script (installEventUI.ps1) can help installing the prerequisites, as well as cloning the UI repos.
 * Clone the repos:
   * Gateway: git clone [https://github.com/Azure/Sia-Gateway](https://github.com/Azure/Sia-Gateway)
   * UI: git clone [https://github.com/Azure/Sia-EventUi](https://github.com/Azure/Sia-EventUi)
