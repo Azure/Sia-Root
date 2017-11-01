@@ -4,8 +4,9 @@ namespace Sia.Shared.Authentication
 {
     public class AzureActiveDirectoryAuthenticationInfo
     {
-        public AzureActiveDirectoryAuthenticationInfo(string clientId, string clientSecret, string tenant)
+        public AzureActiveDirectoryAuthenticationInfo(string resource, string clientId, string clientSecret, string tenant)
         {
+            Resource = resource;
             ClientId = clientId;
             ClientSecret = clientSecret;
             Tenant = tenant;
@@ -14,12 +15,16 @@ namespace Sia.Shared.Authentication
         ///   For the public AAD endpoint, this will be https://login.microsoftonline.com/{0}, but it may be different in China and potentially other sovereign clouds
         /// </summary>
         public string AadInstance => "https://login.microsoftonline.com/{0}";
+       /// <summary>
+       /// The client ID or resource URI of the application you're authenticating TO
+       /// </summary>
+        public string Resource { get; }
         /// <summary>
-        /// The application ID of the application you're authenticating TO
+        /// The application ID of the application you're authenticating FROM
         /// </summary>
         public string ClientId { get; }
         /// <summary>
-        /// A valid secret for the application you're authenticating TO
+        /// A valid secret for the application you're authenticating FROM
         /// </summary>
         public string ClientSecret { get; }
         /// <summary>

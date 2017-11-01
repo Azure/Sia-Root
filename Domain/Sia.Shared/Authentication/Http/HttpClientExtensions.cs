@@ -56,12 +56,12 @@ namespace System.Net.Http
             var credential = new ClientCredential(authenticationInfo.AuthConfig.ClientId, authenticationInfo.AuthConfig.ClientSecret);
             try
             {
-                var result = await authContext.AcquireTokenSilentAsync(authenticationInfo.AuthConfig.ClientId, credential, new UserIdentifier(userObjectID, UserIdentifierType.UniqueId));
+                var result = await authContext.AcquireTokenSilentAsync(authenticationInfo.AuthConfig.Resource, credential, new UserIdentifier(userObjectID, UserIdentifierType.UniqueId));
                 return result.AccessToken;
             }
             catch (AdalSilentTokenAcquisitionException)
             {
-                var result = await authContext.AcquireTokenAsync(authenticationInfo.AuthConfig.ClientId, credential);
+                var result = await authContext.AcquireTokenAsync(authenticationInfo.AuthConfig.Resource, credential);
                 return result.AccessToken;
             }
         }
