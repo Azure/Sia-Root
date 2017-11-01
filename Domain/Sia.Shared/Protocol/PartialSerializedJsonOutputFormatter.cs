@@ -35,8 +35,9 @@ namespace Sia.Shared.Protocol
 
         protected override bool CanWriteType(Type type)
         {
-            if (!type.IsGenericType) return false;
-            if (type.GetGenericArguments().Count() != 1) return false;
+            if (type is null 
+                || !type.IsGenericType
+                || type.GetGenericArguments().Count() != 1) return false;
 
             var enumIntName = typeof(IEnumerable<>).ToString();
             var enumerableInterface = type.GetInterface(enumIntName
