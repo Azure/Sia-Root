@@ -8,7 +8,6 @@ Software systems are only as effective as they are reliable. As online services 
 *  [Grey failures](https://www.microsoft.com/en-us/research/wp-content/uploads/2017/06/paper-1.pdf), capacity tipping points, and other cases where multiple systems interact in unanticipated ways to produce problems without a known path to mitigation, especially when changes to code or configuration may result in more impact to users than the problem itself.
 * Situations where multiple teams are simultaneously investigating outages, some (but not all) of which share a root cause.
 * Long-running issues that require coordination between multiple teams and handoff between shifts within each team over the course of several days or weeks.
-* Long-running issues that require coordination between multiple teams and handoff between shifts within each team over the course of several days or weeks.
 * Major security issues such as [Heartbleed](https://en.wikipedia.org/wiki/Heartbleed) and [WannaCry](https://en.wikipedia.org/wiki/WannaCry_ransomware_attack) that require immediate updates across significant portions of an organization's infrastructure.
 * Disasters that cause extended or permanent loss of significant physical capacity, including undersea fiber cuts and loss of data center buildings.
 
