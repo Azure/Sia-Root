@@ -9,6 +9,8 @@ namespace Sia.Domain.ApiModels.Playbooks
     {
         [Required]
         public string Name { get; set; }
+        public bool IsUrl { get; set; }
+        public string Template { get; set; }
         public ICollection<CreateActionTemplateSource> NewSources { get; set; }
             = new List<CreateActionTemplateSource>();
         public ICollection<long> ExistingSourceIds { get; set; }

@@ -9,16 +9,36 @@ namespace Sia.Domain.Playbook
     {
         public long Id { get; set; }
         public string Name { get; set; }
+        public AssertionType AssertionType { get; set; }
+            = AssertionType.IsOrDoes;
         public ConditionType ConditionType { get; set; }
+        public DataFormat DataFormat { get; set; }
+            = DataFormat.String;
         public string ComparisonValue { get; set; }
+        public long? IntegerComparisonValue { get; set; }
+        public DateTime DateTimeComparisonValue { get; set; }
         public ConditionSource ConditionSource { get; set; }
+    }
+
+    public enum AssertionType
+    {
+        IsOrDoes,
+        IsNotOrDoesNot
     }
 
     public enum ConditionType
     {
-        Equals,
-        DoesNotEqual,
-        Contains,
-        DoesNotContain
+        Equal,
+        Contain,
+        HaveValue,
+        GreaterThan,
+        LessThan
+    }
+
+    public enum DataFormat
+    {
+        String,
+        DateTime,
+        Integer
     }
 }
