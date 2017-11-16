@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Sia.Domain.Playbook
 {
-    public abstract class Source : IEntity
+    public class Source : IEntity
     {
         public long Id { get; set; }
         public string Name { get; set; }

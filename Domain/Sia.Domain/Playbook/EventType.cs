@@ -9,6 +9,7 @@ namespace Sia.Domain.Playbook
         public long Id { get; set; }
         public string Name { get; set; }
         public object Data { get; set; }
+        public DisplayTemplate DisplayTemplate { get; set; }
         public ICollection<Action> Actions { get; set; }
             = new List<Action>();
     }
