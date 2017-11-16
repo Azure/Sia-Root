@@ -1,11 +1,11 @@
-﻿using Sia.Shared.Transactions;
+﻿using Sia.Shared.Protocol;
 using System;
 
 namespace Sia.Shared.Exceptions
 {
     public static class ConvertStatusToException
     {
-        public static void ThrowExceptionOnUnsuccessfulStatus<T>(this IResponse<T> response)
+        public static void ThrowExceptionOnUnsuccessfulStatus(this IResponse response)
         {
             if (response.IsSuccessStatusCode)
             {

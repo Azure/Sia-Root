@@ -18,6 +18,7 @@ namespace Sia.Domain.Playbook
     {
         AnyOf,
         AllOf,
-        NoneOf
+        NoneOf,
+        NotAllOf
     }
 }
