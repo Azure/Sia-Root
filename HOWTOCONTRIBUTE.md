@@ -7,7 +7,7 @@ Issues labeled beginner are good candidates to pick up if you are in the code fo
 # Installing Prerequisites
 ## You'll need…
 ### For Development
-* [NodeJs](https://nodejs.org/en/download/)
+* [Node.js](https://nodejs.org/en/download/)
 * [Visual Studio 2017 or VSCode](https://www.visualstudio.com/downloads/) 
 * [.Net Core SDK](https://www.microsoft.com/net/download/core)
 * [.Net Core Runtime](https://www.microsoft.com/net/download/core#/runtime) (if version of the runtime shipped with the SDK is not working)
@@ -23,8 +23,8 @@ Issues labeled beginner are good candidates to pick up if you are in the code fo
 ## Configurations
 ### For Development
 * Follow instructions in the README.md files in each of the child repositories.
-   * [Sia-Gateway](https://github.com/Azure/Sia-Gateway/blob/master/src/Sia.Gateway/README.md)
-   * [Sia-EventUi](https://github.com/Azure/Sia-EventUI/blob/master/README.md)
+   * [Sia-Gateway](https://github.com/Azure/Sia-Gateway/blob/master/src/Sia.Gateway/README.md) (located in <code>Sia-Gateway/src/Sia.Gateway/README.md</code>)
+   * [Sia-EventUi](https://github.com/Azure/Sia-EventUI/blob/master/README.md) (located in <code>Sia-EventUI/README.md</code>)
    
 ### For A Functional, Authenticated Environment
 //Todo: Instructions for configuring Azure resources
