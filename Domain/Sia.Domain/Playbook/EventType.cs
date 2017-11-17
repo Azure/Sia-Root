@@ -12,5 +12,7 @@ namespace Sia.Domain.Playbook
         public DisplayTemplate DisplayTemplate { get; set; }
         public ICollection<Action> Actions { get; set; }
             = new List<Action>();
+
+        public object displayTemplate { get; set; }
     }
 }
