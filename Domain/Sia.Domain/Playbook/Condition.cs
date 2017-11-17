@@ -17,7 +17,7 @@ namespace Sia.Domain.Playbook
         public string ComparisonValue { get; set; }
         public long? IntegerComparisonValue { get; set; }
         public DateTime DateTimeComparisonValue { get; set; }
-        public ConditionSource ConditionSource { get; set; }
+        public Source ConditionSource { get; set; }
     }
 
     public enum AssertionType
