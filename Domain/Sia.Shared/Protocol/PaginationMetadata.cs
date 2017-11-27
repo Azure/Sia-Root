@@ -1,4 +1,6 @@
-﻿using Sia.Shared.Protocol;
+﻿using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
+using Sia.Shared.Protocol;
 
 namespace Sia.Shared.Protocol
 {
@@ -8,17 +10,17 @@ namespace Sia.Shared.Protocol
         public int PageSize { get; set; } = 50;
         public long TotalRecords { get; set; }
         public long TotalPages => (TotalRecords / PageSize) + (TotalRecords % PageSize > 0 ? 1 : 0);
-        public object PreviousPageLinkInfo => PreviousPageExists ? new
+        public StringValues PreviousPageLinkInfo => PreviousPageExists ? JsonConvert.SerializeObject(new
         {
             PageNumber = PageNumber - 1,
             PageSize = PageSize
-        } : null;
+        }) : null;
 
-        public object NextPageLinkInfo => NextPageExists ? new
+        public StringValues NextPageLinkInfo => NextPageExists ? JsonConvert.SerializeObject(new
         {
             PageNumber = PageNumber + 1,
             PageSize = PageSize
-        } : null;
+        }) : null;
 
         public bool PreviousPageExists => PageNumber > 1;
         public bool NextPageExists => PageNumber < TotalPages;

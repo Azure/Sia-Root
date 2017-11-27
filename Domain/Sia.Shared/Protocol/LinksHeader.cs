@@ -18,7 +18,10 @@ namespace Sia.Shared.Protocol
         }
 
         public const string HeaderName = "links";
-        public StringValues HeaderValues => JsonConvert.SerializeObject(new
+        public virtual StringValues HeaderValues =>
+            _baseHeaderValues;
+
+        private StringValues _baseHeaderValues => JsonConvert.SerializeObject(new
         {
             PageNumber = _metadata.PageNumber,
             PageSize = _metadata.PageSize,

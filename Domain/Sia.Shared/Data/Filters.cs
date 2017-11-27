@@ -1,4 +1,5 @@
-﻿using Sia.Shared.Data;
+﻿using Microsoft.Extensions.Primitives;
+using Sia.Shared.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace Sia.Shared.Data
     public abstract class Filters<T>
     {
         public abstract IQueryable<T> Filter(IQueryable<T> source);
+        public abstract StringValues FilterValues();
     }
 }
 

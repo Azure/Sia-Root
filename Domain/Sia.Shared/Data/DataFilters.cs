@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,5 +26,12 @@ namespace Sia.Shared.Data
             }
             return working;
         }
+        public abstract StringValues NonDataFilterValues();
+        public override StringValues FilterValues() => StringValues.Concat(NonDataFilterValues(), _dataFilterValues());
+        private StringValues _dataFilterValues() => JsonConvert.SerializeObject(new
+        {
+            DataKey = DataKey,
+            DataValue = DataValue
+        });
     }
 }
