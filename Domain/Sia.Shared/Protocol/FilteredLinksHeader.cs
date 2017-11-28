@@ -20,5 +20,11 @@ namespace Sia.Shared.Protocol
 
         public override StringValues HeaderValues
             => StringValues.Concat(base.HeaderValues, _filterMetadata.FilterValues());
+
+        protected override StringValues NextPageLinkInfo
+            => StringValues.Concat(base.NextPageLinkInfo, _filterMetadata.FilterValues());
+
+        protected override StringValues PreviousPageLinkInfo
+            => StringValues.Concat(base.PreviousPageLinkInfo, _filterMetadata.FilterValues());
     }
 }
