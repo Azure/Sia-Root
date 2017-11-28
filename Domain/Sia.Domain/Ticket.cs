@@ -2,7 +2,8 @@
 
 namespace Sia.Domain
 {
-    public class Ticket : IEntity
+    public class Ticket : IEntity,
+        IJsonDataObject
     {
         public long Id { get; set; }
         public long IncidentId { get; set; }
@@ -10,5 +11,6 @@ namespace Sia.Domain
         public long TicketingSystemId { get; set; }
         public string OriginUri { get; set; }
         public bool IsPrimary { get; set; }
+        public object Data { get; set; }
     }
 }
