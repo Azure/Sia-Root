@@ -9,11 +9,7 @@ using System.Threading.Tasks;
 
 namespace Sia.Shared.Authentication
 {
-    public interface ISecretVault
-    {
-        Task<string> Get(string secretName);
-    }
-    public class AzureSecretVault : ISecretVault
+    public class AzureSecretVault
     {
         private readonly KeyVaultConfiguration _config;
         private const string _secretsEndpoint = "/secrets/";
@@ -42,10 +38,14 @@ namespace Sia.Shared.Authentication
         {
             try
             {
-                var cert = await GetKeyVaultClient()
+                var client = GetKeyVaultClient();
+                var cert = await client
                     .GetCertificateAsync(_config.Vault, certificateName)
                     .ConfigureAwait(false);
-                return new X509Certificate2(cert.Cer);
+
+                var secretBundle = await client.GetSecretAsync(cert.Sid);
+
+                return new X509Certificate2(Convert.FromBase64String(secretBundle.Value));
             }
             catch (KeyVaultErrorException ex)
             {

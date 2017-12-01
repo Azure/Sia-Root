@@ -1,4 +1,6 @@
-﻿using Sia.Shared.Validation;
+﻿using Microsoft.Extensions.Logging;
+using Sia.Shared.Authentication.Certificates;
+using Sia.Shared.Validation;
 using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
@@ -10,20 +12,46 @@ namespace Sia.Shared.Authentication
     public class KeyVaultCertificateRetriever
         : CertificateRetriever
     {
-        private readonly X509Certificate2 _certificate;
+        private readonly string _certName;
+        private readonly AzureSecretVault _vault;
 
-        public KeyVaultCertificateRetriever(AzureSecretVault certificateVault, string certificateName)
+        public KeyVaultCertificateRetriever(
+            AzureSecretVault certificateVault,
+            string certificateName,
+            ILoggerFactory loggerFactory
+        ) : base(loggerFactory.CreateLogger<KeyVaultCertificateRetriever>())
         {
-            ThrowIf.NullOrWhiteSpace(certificateName, nameof(certificateName));
+            _certName = ThrowIf.NullOrWhiteSpace(certificateName, nameof(certificateName));
+            _vault = ThrowIf.Null(certificateVault, nameof(certificateVault));
+        }
 
-            var certTask = certificateVault.GetCertificate(certificateName);
+        protected override X509Certificate2 RetrieveCertificate()
+        {
+            var certTask = _vault.GetCertificate(_certName);
             Task.WaitAll(new Task[] { certTask });
             if (certTask.IsCompleted)
             {
-                _certificate = certTask.Result;
+                var certificate = certTask.Result;
+                _logger.LogDebug($"Certificate retrieved successfully: {certificate.FriendlyName}");
+                return certificate;
+            }
+            else
+            {
+                if (certTask.Exception is null)
+                {
+                    _logger.LogError($"Error with no exception when"
+                        + " attempting to load certificate from vault");
+                    throw new CertificateRetrievalException();
+                }
+                else
+                {
+                    _logger.LogError(
+                       certTask.Exception,
+                       "Exception when attempting to load certificate from vault"
+                    );
+                    throw new CertificateRetrievalException(certTask.Exception);
+                }
             }
         }
-
-        public override X509Certificate2 Certificate => _certificate;
     }
 }
