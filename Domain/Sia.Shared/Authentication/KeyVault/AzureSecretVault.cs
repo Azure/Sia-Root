@@ -34,7 +34,7 @@ namespace Sia.Shared.Authentication
             }
         }
 
-        public async Task<X509Certificate2> GetCertificate(string certificateName)
+        public async Task<X509Certificate2> GetCertificateAsync(string certificateName)
         {
             try
             {

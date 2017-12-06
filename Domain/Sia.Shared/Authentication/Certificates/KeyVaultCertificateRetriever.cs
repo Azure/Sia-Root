@@ -25,32 +25,19 @@ namespace Sia.Shared.Authentication
             _vault = ThrowIf.Null(certificateVault, nameof(certificateVault));
         }
 
-        protected override X509Certificate2 RetrieveCertificate()
+        protected override async Task<X509Certificate2> RetrieveCertificateAsync()
         {
-            var certTask = _vault.GetCertificate(_certName);
-            Task.WaitAll(new Task[] { certTask });
-            if (certTask.IsCompleted)
+            try
             {
-                var certificate = certTask.Result;
-                _logger.LogDebug($"Certificate retrieved successfully: {certificate.FriendlyName}");
-                return certificate;
+                return await _vault.GetCertificateAsync(_certName);
             }
-            else
+            catch(Exception ex)
             {
-                if (certTask.Exception is null)
-                {
-                    _logger.LogError($"Error with no exception when"
-                        + " attempting to load certificate from vault");
-                    throw new CertificateRetrievalException();
-                }
-                else
-                {
-                    _logger.LogError(
-                       certTask.Exception,
-                       "Exception when attempting to load certificate from vault"
-                    );
-                    throw new CertificateRetrievalException(certTask.Exception);
-                }
+                _logger.LogError(
+                   ex,
+                   "Exception when attempting to load certificate from vault"
+                );
+                throw new CertificateRetrievalException(ex);
             }
         }
     }

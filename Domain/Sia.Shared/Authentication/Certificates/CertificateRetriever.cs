@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 
 namespace Sia.Shared.Authentication
 {
@@ -12,29 +13,25 @@ namespace Sia.Shared.Authentication
         }
         private X509Certificate2 _cert;
         private HttpClient _client;
-        public X509Certificate2 Certificate
-        {
-            get
-            {
-                if (_cert == null)
-                {
-                    _cert = RetrieveCertificate();
-                }
-                return _cert;
-            }
-        }
-        protected abstract X509Certificate2 RetrieveCertificate();
+
+
+        protected abstract Task<X509Certificate2> RetrieveCertificateAsync();
         protected ILogger _logger { get; }
 
-        public HttpClient GetClient()
+        public async Task<HttpClient> GetClientAsync()
         {
             if(_client is null)
             {
+                if (_cert is null)
+                {
+                    _cert = await RetrieveCertificateAsync();
+                    _logger.LogDebug($"Retrieved Certificate with thumbprint {_cert.Thumbprint}");
+                }
                 var handler = new HttpClientHandler();
-                handler.ClientCertificates.Add(Certificate);
+                handler.ClientCertificates.Add(_cert);
                 
                 _client = new HttpClient(handler);
-                _logger.LogDebug($"Created client with certificate {Certificate.FriendlyName}");
+                _logger.LogDebug($"Created client with certificate with thumbprint {_cert.Thumbprint}");
             }
             return _client;
         }

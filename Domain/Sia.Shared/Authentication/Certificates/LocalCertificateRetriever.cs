@@ -2,6 +2,7 @@
 using Sia.Shared.Validation;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 
 namespace Sia.Shared.Authentication
 {
@@ -24,7 +25,7 @@ namespace Sia.Shared.Authentication
             _certThumbprint = ThrowIf.NullOrWhiteSpace(certThumbprint, nameof(certThumbprint));
         }
 
-        protected override X509Certificate2 RetrieveCertificate()
+        protected override Task<X509Certificate2> RetrieveCertificateAsync()
         {
             foreach (var location in _storeLocations)
             {
@@ -34,7 +35,7 @@ namespace Sia.Shared.Authentication
                     X509Certificate2Collection certificates = store.Certificates.Find(X509FindType.FindByThumbprint, _certThumbprint, true);
 
                     if (certificates.Count > 0)
-                        return certificates[0];
+                        return Task.FromResult(certificates[0]);
                 }
             }
             throw new KeyNotFoundException("Could not find valid certificate");
