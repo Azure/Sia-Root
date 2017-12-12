@@ -10,7 +10,7 @@ namespace Sia.Shared.Protocol
 {
     public class FilteredLinksHeader<T> : LinksHeader
     {
-        public FilteredLinksHeader(Filters<T> filterMetadata, PaginationMetadata metadata, IUrlHelper urlHelper, string routeName)
+        public FilteredLinksHeader(Filters<T> filterMetadata, IPaginationLinks metadata, IUrlHelper urlHelper, string routeName)
             : base(metadata, urlHelper, routeName)
         {
             _filterMetadata = filterMetadata;
@@ -20,11 +20,5 @@ namespace Sia.Shared.Protocol
 
         public override StringValues HeaderValues
             => StringValues.Concat(base.HeaderValues, _filterMetadata.FilterValues());
-
-        protected override StringValues NextPageLinkInfo
-            => StringValues.Concat(base.NextPageLinkInfo, _filterMetadata.FilterValues());
-
-        protected override StringValues PreviousPageLinkInfo
-            => StringValues.Concat(base.PreviousPageLinkInfo, _filterMetadata.FilterValues());
     }
 }

@@ -1,39 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using Sia.Shared.Validation;
 
 namespace Sia.Shared.Protocol
 {
     public class LinksHeader
     {
-        private PaginationMetadata _metadata;
+        private IPaginationLinks _metadata;
         private IUrlHelper _urlHelper;
         private string _routeName;
 
-        public LinksHeader(PaginationMetadata metadata, IUrlHelper urlHelper, string routeName)
+        public LinksHeader(IPaginationLinks metadata, IUrlHelper urlHelper, string routeName)
         {
-            _metadata = metadata;
-            _urlHelper = urlHelper;
-            _routeName = routeName;
+            _metadata = ThrowIf.Null(metadata, nameof(metadata));
+            _urlHelper = ThrowIf.Null(urlHelper, nameof(urlHelper));
+            _routeName = ThrowIf.NullOrWhiteSpace(routeName, nameof(routeName));
         }
 
         public const string HeaderName = "links";
         public virtual StringValues HeaderValues =>
-            _baseHeaderValues;
-
-        protected virtual StringValues NextPageLinkInfo => _metadata.NextPageLinkInfo;
-
-        protected virtual StringValues PreviousPageLinkInfo => _metadata.PreviousPageLinkInfo;
-
-        private StringValues _baseHeaderValues => JsonConvert.SerializeObject(new
-        {
-            PageNumber = _metadata.PageNumber,
-            PageSize = _metadata.PageSize,
-            TotalRecords = _metadata.TotalRecords,
-            TotalPages = _metadata.TotalPages,
-            NextPageLink = _metadata.NextPageExists ? _urlHelper.Action(_routeName, NextPageLinkInfo) : null,
-            PrevPageLink = _metadata.PreviousPageExists ? _urlHelper.Action(_routeName, PreviousPageLinkInfo) : null
-        });
+            _metadata.HeaderValues(_urlHelper, _routeName);
     }
 }
 
