@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Microsoft.Sia.Domain</PackageId>
-    <Version>1.1.3-alpha</Version>
+    <Version>1.1.4-alpha</Version>
     <Authors>pdimit, magpint, jache, chtownes</Authors>
     <Company>Microsoft</Company>
     <Product>SRE Incident Assistant</Product>
