@@ -1,6 +1,5 @@
-﻿using Microsoft.Extensions.Primitives;
-using Newtonsoft.Json;
-using Sia.Shared.Protocol;
+﻿using Sia.Shared.Protocol;
+using System.Collections.Generic;
 
 namespace Sia.Shared.Protocol
 {
@@ -10,17 +9,18 @@ namespace Sia.Shared.Protocol
         public int PageSize { get; set; } = 50;
         public long TotalRecords { get; set; }
         public long TotalPages => (TotalRecords / PageSize) + (TotalRecords % PageSize > 0 ? 1 : 0);
-        public StringValues PreviousPageLinkInfo => PreviousPageExists ? JsonConvert.SerializeObject(new
+        public IDictionary<string, string> PreviousPageLinkInfo => new Dictionary<string, string>
         {
-            PageNumber = PageNumber - 1,
-            PageSize = PageSize
-        }) : null;
+            { nameof(PageNumber), (PageNumber - 1).ToString() },
+            { nameof(PageSize), PageSize.ToString() }
+        };
 
-        public StringValues NextPageLinkInfo => NextPageExists ? JsonConvert.SerializeObject(new
+
+        public IDictionary<string, string> NextPageLinkInfo => new Dictionary<string, string>
         {
-            PageNumber = PageNumber + 1,
-            PageSize = PageSize
-        }) : null;
+            { nameof(PageNumber), (PageNumber + 1).ToString() },
+            { nameof(PageSize), PageSize.ToString() }
+        };
 
         public bool PreviousPageExists => PageNumber > 1;
         public bool NextPageExists => PageNumber < TotalPages;

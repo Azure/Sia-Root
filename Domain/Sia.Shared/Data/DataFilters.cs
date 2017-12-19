@@ -26,12 +26,14 @@ namespace Sia.Shared.Data
             }
             return working;
         }
-        public abstract StringValues NonDataFilterValues();
-        public override StringValues FilterValues() => StringValues.Concat(NonDataFilterValues(), _dataFilterValues());
-        private StringValues _dataFilterValues() => JsonConvert.SerializeObject(new
+        public abstract IEnumerable<KeyValuePair<string, string>> NonDataFilterValues();
+        public override IEnumerable<KeyValuePair<string, string>> FilterValues()
+            => _dataFilterValues().Concat(NonDataFilterValues());
+
+        private IEnumerable<KeyValuePair<string, string>> _dataFilterValues()
         {
-            DataKey = DataKey,
-            DataValue = DataValue
-        });
+            if (!string.IsNullOrWhiteSpace(DataKey)) yield return new KeyValuePair<string, string>(nameof(DataKey), DataKey);
+            if (!string.IsNullOrWhiteSpace(DataValue)) yield return new KeyValuePair<string, string>(nameof(DataValue), DataValue );
+        }
     }
 }

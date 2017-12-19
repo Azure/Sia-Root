@@ -7,10 +7,21 @@ using System.Text;
 
 namespace Sia.Shared.Data
 {
+    public interface IQueryFilterer<T>
+    {
+        IQueryable<T> Filter(IQueryable<T> source);
+    }
+
+    public interface IFilterMetadataProvider
+    {
+        IEnumerable<KeyValuePair<string, string>> FilterValues();
+    }
     public abstract class Filters<T>
+        : IQueryFilterer<T>,
+        IFilterMetadataProvider
     {
         public abstract IQueryable<T> Filter(IQueryable<T> source);
-        public abstract StringValues FilterValues();
+        public abstract IEnumerable<KeyValuePair<string, string>> FilterValues();
     }
 }
 
