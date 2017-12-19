@@ -29,7 +29,7 @@ namespace System.Linq
 {
     public static class FilterExtensions
     {
-        public static IQueryable<T> WithFilter<T>(this IQueryable<T> source, Filters<T> filter)
+        public static IQueryable<T> WithFilter<T>(this IQueryable<T> source, IQueryFilterer<T> filter)
             => filter.Filter(source);
     }
 }
