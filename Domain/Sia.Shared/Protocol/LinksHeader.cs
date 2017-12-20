@@ -53,7 +53,7 @@ namespace Sia.Shared.Protocol
             => $"\"{token.Key}\":\"{token.Value}\"";
 
         protected string FormatUrl(IEnumerable<KeyValuePair<string, string>> tokens)
-            => string.Join("&", tokens.Select(UrlTokenFormat));
+            => "/?" + string.Join("&", tokens.Select(UrlTokenFormat));
 
         protected string FormatJson(IEnumerable<KeyValuePair<string, string>> tokens)
             => "{" + string.Join(",", tokens.Select(JsonTokenFormat)) + "}";
