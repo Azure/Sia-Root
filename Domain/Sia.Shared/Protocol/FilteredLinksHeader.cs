@@ -5,20 +5,28 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Sia.Shared.Data;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace Sia.Shared.Protocol
 {
-    public class FilteredLinksHeader<T> : LinksHeader
+    public class FilteredLinksHeader : LinksHeader
     {
-        public FilteredLinksHeader(Filters<T> filterMetadata, PaginationMetadata metadata, IUrlHelper urlHelper, string routeName)
+        public FilteredLinksHeader(IFilterMetadataProvider filterMetadata, PaginationMetadata metadata, IUrlHelper urlHelper, string routeName)
             : base(metadata, urlHelper, routeName)
         {
             _filterMetadata = filterMetadata;
         }
 
-        private Filters<T> _filterMetadata;
+        protected IFilterMetadataProvider _filterMetadata;
 
-        public override StringValues HeaderValues
-            => StringValues.Concat(base.HeaderValues, _filterMetadata.FilterValues());
+        protected override IEnumerable<KeyValuePair<string, string>> _headerValues() 
+            => base._headerValues().Concat(_filterMetadata.FilterValues());
+
+        protected override IEnumerable<KeyValuePair<string, string>> _nextPageLinkValues
+            => base._nextPageLinkValues.Concat(_filterMetadata.FilterValues());
+
+        protected override IEnumerable<KeyValuePair<string, string>> _previousPageLinkValues
+           => base._previousPageLinkValues.Concat(_filterMetadata.FilterValues());
+
     }
 }
