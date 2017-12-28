@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.1.5-alpha</Version>
+    <Version>1.1.6-alpha</Version>
     <PackageId>Microsoft.Sia.Shared</PackageId>
     <Authors>pdimit, magpint, jache, chtownes</Authors>
     <Company>Microsoft</Company>
