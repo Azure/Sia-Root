@@ -1,9 +1,10 @@
 ﻿using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Sia.Shared.Authentication
 {
     public interface IHttpClientFactory
     {
-        HttpClient GetClient();
+        Task<HttpClient> GetClientAsync();
     }
 }

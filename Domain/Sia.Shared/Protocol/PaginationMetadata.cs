@@ -1,12 +1,5 @@
-﻿using AutoMapper.QueryableExtensions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Primitives;
-using Newtonsoft.Json;
-using Sia.Shared.Protocol;
+﻿using Sia.Shared.Protocol;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Sia.Shared.Protocol
 {
@@ -32,32 +25,19 @@ namespace Sia.Shared.Protocol
     {
         public int MaxPageSize { get; set; } = 50;
         public long TotalRecords { get; set; }
-        public long TotalPages => (TotalRecords / MaxPageSize) + (TotalRecords % MaxPageSize > 0 ? 1 : 0);
-        public StringValues PreviousPageLinkInfo
-            => PreviousPageExists
-            ? StringValues.Concat(CommonLinkValues(), PreviousPageLinkValues)
-            : StringValues.Empty;
-
-        public StringValues NextPageLinkInfo
-            => NextPageExists
-            ? StringValues.Concat(CommonLinkValues(), NextPageLinkValues)
-            : StringValues.Empty;
-
-        protected virtual StringValues CommonLinkValues()
-            => JsonConvert.SerializeObject(new
-            {
-                MaxPageSize = MaxPageSize
-            });
-
-        protected abstract StringValues NextPageLinkValues { get; }
-        protected abstract StringValues PreviousPageLinkValues { get; }
-        public abstract bool PreviousPageExists { get; }
-        public abstract bool NextPageExists { get; }
-        public virtual IQueryable<T> Paginate(IQueryable<T> source)
+        public long TotalPages => (TotalRecords / PageSize) + (TotalRecords % PageSize > 0 ? 1 : 0);
+        public IDictionary<string, string> PreviousPageLinkInfo => new Dictionary<string, string>
         {
-            TotalRecords = source.LongCount();
-            return ImplementPagination(source);
-        }
+            { nameof(PageNumber), (PageNumber - 1).ToString() },
+            { nameof(PageSize), PageSize.ToString() }
+        };
+
+
+        public IDictionary<string, string> NextPageLinkInfo => new Dictionary<string, string>
+        {
+            { nameof(PageNumber), (PageNumber + 1).ToString() },
+            { nameof(PageSize), PageSize.ToString() }
+        };
 
         protected abstract IQueryable<T> ImplementPagination(IQueryable<T> source);
 
