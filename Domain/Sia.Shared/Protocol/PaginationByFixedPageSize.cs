@@ -15,28 +15,35 @@ namespace Sia.Shared.Protocol
 
         public override bool PreviousPageExists => PageNumber > 1;
         public override bool NextPageExists => PageNumber < TotalPages;
-        protected override StringValues NextPageLinkValues
-            => JsonConvert.SerializeObject(new
+
+        public override IEnumerable<KeyValuePair<string, string>> PreviousPageLinkInfo
+        {
+            get
             {
-                PageNumber = PageNumber + 1
-            });
-        protected override StringValues PreviousPageLinkValues
-            => JsonConvert.SerializeObject(new
+                yield return new KeyValuePair<string, string>(nameof(PageNumber), (PageNumber - 1).ToString() );
+            }
+        }
+
+        public override IEnumerable<KeyValuePair<string, string>> NextPageLinkInfo
+        {
+            get
             {
-                PageNumber = PageNumber - 1
-            });
-        protected override IQueryable<T> ImplementPagination(IQueryable<T> source)
+                yield return new KeyValuePair<string, string>(nameof(PageNumber), (PageNumber + 1).ToString() );
+            }
+        }
+        public override IQueryable<T> Paginate(IQueryable<T> source)
             => source
                 .Skip((PageNumber - 1) * MaxPageSize)
                 .Take(MaxPageSize);
-        public override StringValues HeaderValues(IUrlHelper urlHelper, string routeName)
-            => StringValues.Concat(
-                    base.HeaderValues(urlHelper, routeName),
-                    JsonConvert.SerializeObject(new
-                    {
-                        PageNumber = PageNumber
-                    })
-                );
+
+        public override IEnumerable<KeyValuePair<string, string>> PaginationHeaderValues()
+        {
+            foreach (var value in base.PaginationHeaderValues())
+            {
+                yield return value;
+            }
+            yield return new KeyValuePair<string, string>(nameof(PageNumber), PageNumber.ToString());
+        }
 
     }
 }

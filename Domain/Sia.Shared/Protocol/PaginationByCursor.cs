@@ -54,6 +54,9 @@ namespace Sia.Shared.Protocol
         private bool _sortOrder = false;
         private TCursor _finalValue;
 
+        protected bool _readingInOrder => _sortOrder == _cursorDirection;
+        protected bool _readingInReverse => _sortOrder != _cursorDirection;
+
         public override bool NextPageExists
             => !(_cursorDirection == _sortOrder 
                 && CursorValue.Equals(FinalValue));
@@ -62,37 +65,39 @@ namespace Sia.Shared.Protocol
             : _cursorDirection == _sortOrder ? true //Reading page after the first
             : CursorValue.Equals(FinalValue); //?
 
-        protected override StringValues NextPageLinkValues
-            => JsonConvert.SerializeObject(new
+        public override IEnumerable<KeyValuePair<string, string>> NextPageLinkInfo
+        {
+            get
             {
-                CursorDirection = _sortOrder == _cursorDirection
-                    ? CursorDirection
-                    : TranslateFromDirectionalBool(!_cursorDirection),
-                CursorValue = _sortOrder == _cursorDirection
+                var cursorDirection = TranslateFromDirectionalBool(_readingInOrder
+                    ? _cursorDirection
+                    : !_cursorDirection);
+                var cursorValue = _readingInOrder
                     ? FinalValue
-                    : CursorValue
-            });
+                    : CursorValue;
+                yield return new KeyValuePair<string, string>(nameof(CursorDirection), cursorDirection);
+                yield return new KeyValuePair<string, string>(nameof(CursorValue), cursorValue.ToString());
+                yield return new KeyValuePair<string, string>(nameof(SortOrder), SortOrder);
+            }
+        }
 
-        protected override StringValues PreviousPageLinkValues
-            => JsonConvert.SerializeObject(new
+        public override IEnumerable<KeyValuePair<string, string>> PreviousPageLinkInfo
+        {
+            get
             {
-                CursorDirection = _sortOrder == _cursorDirection
-                        ? TranslateFromDirectionalBool(!_cursorDirection)
-                        : CursorDirection,
-                CursorValue = _sortOrder == _cursorDirection
-                        ? CursorValue
-                        : FinalValue
-            });
+                var cursorDirection = _readingInOrder
+                    ? TranslateFromDirectionalBool(!_cursorDirection)
+                    : CursorDirection;
+                var cursorValue = _readingInOrder
+                    ? CursorValue
+                    : FinalValue;
+                yield return new KeyValuePair<string, string>(nameof(CursorDirection), cursorDirection);
+                yield return new KeyValuePair<string, string>(nameof(CursorValue), cursorValue.ToString());
+                yield return new KeyValuePair<string, string>(nameof(SortOrder), SortOrder);
+            }
+        }
 
-        protected override StringValues CommonLinkValues()
-            => StringValues.Concat(
-                base.CommonLinkValues(),
-                JsonConvert.SerializeObject( new
-                {
-                    SortOrder = SortOrder
-                })
-            );
-        protected override IQueryable<TEntity> ImplementPagination(IQueryable<TEntity> source)
+        public override IQueryable<TEntity> Paginate(IQueryable<TEntity> source)
         {
             var filteredResults = source
                 .Where(ValidRecord);

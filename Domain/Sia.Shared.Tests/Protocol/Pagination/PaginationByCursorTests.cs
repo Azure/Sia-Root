@@ -28,21 +28,14 @@ namespace Sia.Shared.Tests.Protocol.Pagination
                 .GetMockAsync(nameof(GetPageAsync_WithUnititializedPaginationByCursor_Returns50LatestResults));
             var objectUnderTest = new SimplePaginationByCursor();
 
-            /*var valueProvider = new QueryStringValueProvider(
-                    BindingSource.Query,
-                    null,
-                    CultureInfo.InvariantCulture
-                );*/
-
-
             var result = await context
                 .SimplePaginatableEntities
                 .GetPageAsync(objectUnderTest);
             
 
             //Get Expected Range
-            Assert.AreEqual(199, result[0].CursorTarget);
-            Assert.AreEqual(150, result[49].CursorTarget);
+            Assert.AreEqual(199, result[0].TestIndexedProperty);
+            Assert.AreEqual(150, result[49].TestIndexedProperty);
             //Set expected final value
             Assert.AreEqual(150, objectUnderTest.FinalValue);
             //No previous page
@@ -51,7 +44,9 @@ namespace Sia.Shared.Tests.Protocol.Pagination
             Assert.IsTrue(objectUnderTest.NextPageExists);
 
             //Preserve cursor and sort order on next page
-            Assert.AreEqual("CursorTarget=desc", objectUnderTest.NextPageLinkInfo.FirstOrDefault(s => s.Contains("CursorTarget")));
+            Assert.AreEqual("desc", objectUnderTest.NextPageLinkInfo.FirstOrDefault(s => s.Key.Equals("CursorDirection")).Value);
+            Assert.AreEqual("desc", objectUnderTest.NextPageLinkInfo.FirstOrDefault(s => s.Key.Equals("SortOrder")).Value);
+
         }
     }
 }

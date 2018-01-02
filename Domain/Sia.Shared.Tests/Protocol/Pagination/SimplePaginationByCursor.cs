@@ -11,14 +11,14 @@ namespace Sia.Shared.Tests.Protocol.Pagination
     public class SimplePaginatableEntity
     {
         public long Id { get; set; }
-        public long CursorTarget { get; set; }
+        public long TestIndexedProperty { get; set; }
         public static IEnumerable<SimplePaginatableEntity> GetEntities(long numberToGenerate, long startingValue = 0)
         {
             for (int i = 0; i < numberToGenerate; i++)
             {
                 yield return new SimplePaginatableEntity()
                 {
-                    CursorTarget = startingValue + i
+                    TestIndexedProperty = startingValue + i
                 };
             }
         }
@@ -26,7 +26,7 @@ namespace Sia.Shared.Tests.Protocol.Pagination
 
     public class SimplePaginatableDto
     {
-        public long CursorTarget { get; set; }
+        public long TestIndexedProperty { get; set; }
     }
 
     public class SimplePaginatableContext : DbContext
@@ -55,9 +55,9 @@ namespace Sia.Shared.Tests.Protocol.Pagination
         : PaginationByCursor<SimplePaginatableEntity, SimplePaginatableDto, long>
     {
         protected override Expression<Func<SimplePaginatableEntity, long>> DataValueSelector
-            => (entity) => entity.CursorTarget;
+            => (entity) => entity.TestIndexedProperty;
 
         protected override Func<SimplePaginatableDto, long> DtoValueSelector
-            => (dto) => dto.CursorTarget;
+            => (dto) => dto.TestIndexedProperty;
     }
 }

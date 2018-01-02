@@ -1,11 +1,20 @@
-﻿using Sia.Shared.Protocol;
+﻿using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Sia.Shared.Protocol;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Sia.Shared.Protocol
 {
-    public interface IPaginationLinks
+    public interface IPaginationMetadata
     {
-        StringValues HeaderValues(IUrlHelper urlHelper, string routeName);
+        IEnumerable<KeyValuePair<string, string>> PaginationHeaderValues();
+        bool NextPageExists { get; }
+        bool PreviousPageExists { get; }
+        IEnumerable<KeyValuePair<string, string>> PreviousPageLinkInfo { get; }
+        IEnumerable<KeyValuePair<string, string>> NextPageLinkInfo { get; }
     }
 
     public interface IPaginator<T>
@@ -17,39 +26,29 @@ namespace Sia.Shared.Protocol
         : IPaginator<TSource>
     { 
         List<TDestination> QueryResult { get; set; }
+        long TotalRecords { get; set; }
     }
 
     public abstract class PaginationMetadata<T>
-        : IPaginationLinks,
+        : IPaginationMetadata,
         IPaginator<T>
     {
         public int MaxPageSize { get; set; } = 50;
         public long TotalRecords { get; set; }
-        public long TotalPages => (TotalRecords / PageSize) + (TotalRecords % PageSize > 0 ? 1 : 0);
-        public IDictionary<string, string> PreviousPageLinkInfo => new Dictionary<string, string>
+        public long TotalPages => (TotalRecords / MaxPageSize) + (TotalRecords % MaxPageSize > 0 ? 1 : 0);
+        public abstract IEnumerable<KeyValuePair<string, string>> PreviousPageLinkInfo { get; }
+        public abstract IEnumerable<KeyValuePair<string, string>> NextPageLinkInfo { get; }
+        public abstract bool NextPageExists { get; }
+        public abstract bool PreviousPageExists { get; }
+
+        public abstract IQueryable<T> Paginate(IQueryable<T> source);
+
+        public virtual IEnumerable<KeyValuePair<string, string>> PaginationHeaderValues()
         {
-            { nameof(PageNumber), (PageNumber - 1).ToString() },
-            { nameof(PageSize), PageSize.ToString() }
-        };
-
-
-        public IDictionary<string, string> NextPageLinkInfo => new Dictionary<string, string>
-        {
-            { nameof(PageNumber), (PageNumber + 1).ToString() },
-            { nameof(PageSize), PageSize.ToString() }
-        };
-
-        protected abstract IQueryable<T> ImplementPagination(IQueryable<T> source);
-
-        public virtual StringValues HeaderValues(IUrlHelper urlHelper, string routeName)
-             => JsonConvert.SerializeObject(new
-             {
-                 MaxPageSize = MaxPageSize,
-                 TotalRecords = TotalRecords,
-                 TotalPages = TotalPages,
-                 NextPageLink = NextPageExists ? urlHelper.Action(routeName, NextPageLinkInfo) : null,
-                 PrevPageLink = PreviousPageExists ? urlHelper.Action(routeName, PreviousPageLinkInfo) : null
-             });
+            yield return new KeyValuePair<string, string>(nameof(MaxPageSize), MaxPageSize.ToString());
+            yield return new KeyValuePair<string, string>(nameof(TotalRecords), TotalRecords.ToString());
+            yield return new KeyValuePair<string, string>(nameof(TotalPages), TotalPages.ToString());
+        }
     }
 }
 
