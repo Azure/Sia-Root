@@ -66,10 +66,15 @@ namespace System.Linq
             ITrackingPaginator<TSource, TDestination> pagination
         )
         {
-            pagination.QueryResult = await source
+            var resultsQuery = source
                 .WithPagination(pagination)
                 .ProjectTo<TDestination>()
                 .ToListAsync();
+
+            var countQuery = source.CountAsync();
+
+            pagination.TotalRecords = await countQuery;
+            pagination.QueryResult = await resultsQuery;
 
             return pagination.QueryResult;
         }
