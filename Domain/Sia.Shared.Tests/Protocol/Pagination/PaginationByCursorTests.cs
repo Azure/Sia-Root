@@ -26,26 +26,23 @@ namespace Sia.Shared.Tests.Protocol.Pagination
         {
             var context = await SimplePaginatableContext
                 .GetMockAsync(nameof(GetPageAsync_WithUnititializedPaginationByCursor_Returns50LatestResults));
-            var objectUnderTest = new SimplePaginationByCursor();
+            var objectUnderTest = new SimplePaginationByCursorRequest();
 
-            var result = await context
-                .SimplePaginatableEntities
-                .GetPageAsync(objectUnderTest);
-            
+            var result = await objectUnderTest.GetFullyTypedResultAsync(context.SimplePaginatableEntities);          
 
             //Get Expected Range
-            Assert.AreEqual(199, result[0].TestIndexedProperty);
-            Assert.AreEqual(150, result[49].TestIndexedProperty);
+            Assert.AreEqual(199, result.QueryResult[0].TestIndexedProperty);
+            Assert.AreEqual(150, result.QueryResult[49].TestIndexedProperty);
             //Set expected final value
-            Assert.AreEqual(150, objectUnderTest.FinalValue);
+            Assert.AreEqual(150, result.FinalValue);
             //No previous page
-            Assert.IsFalse(objectUnderTest.PreviousPageExists);
+            Assert.IsFalse(result.PreviousPageExists);
             //Next page exists
-            Assert.IsTrue(objectUnderTest.NextPageExists);
+            Assert.IsTrue(result.NextPageExists);
 
             //Preserve cursor and sort order on next page
-            Assert.AreEqual("desc", objectUnderTest.NextPageLinkInfo.FirstOrDefault(s => s.Key.Equals("CursorDirection")).Value);
-            Assert.AreEqual("desc", objectUnderTest.NextPageLinkInfo.FirstOrDefault(s => s.Key.Equals("SortOrder")).Value);
+            Assert.AreEqual("desc", result.NextPageLinkInfo.FirstOrDefault(s => s.Key.Equals("CursorDirection")).Value);
+            Assert.AreEqual("desc", result.NextPageLinkInfo.FirstOrDefault(s => s.Key.Equals("SortOrder")).Value);
 
         }
     }

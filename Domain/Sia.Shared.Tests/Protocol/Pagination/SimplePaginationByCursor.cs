@@ -5,6 +5,7 @@ using System.Text;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Sia.Shared.Protocol.Pagination;
 
 namespace Sia.Shared.Tests.Protocol.Pagination
 {
@@ -51,13 +52,13 @@ namespace Sia.Shared.Tests.Protocol.Pagination
         public DbSet<SimplePaginatableEntity> SimplePaginatableEntities { get; set; }
     }
 
-    public class SimplePaginationByCursor
-        : PaginationByCursor<SimplePaginatableEntity, SimplePaginatableDto, long>
+    public class SimplePaginationByCursorRequest
+        : PaginationByCursorRequest<SimplePaginatableEntity, SimplePaginatableDto, long>
     {
         protected override Expression<Func<SimplePaginatableEntity, long>> DataValueSelector
             => (entity) => entity.TestIndexedProperty;
 
-        protected override Func<SimplePaginatableDto, long> DtoValueSelector
+        public override Func<SimplePaginatableDto, long> DtoValueSelector
             => (dto) => dto.TestIndexedProperty;
     }
 }

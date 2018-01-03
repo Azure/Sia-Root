@@ -6,12 +6,13 @@ using Microsoft.Extensions.Primitives;
 using Sia.Shared.Data;
 using Newtonsoft.Json;
 using System.Linq;
+using Sia.Shared.Protocol.Pagination;
 
 namespace Sia.Shared.Protocol
 {
     public class FilteredLinksHeader : LinksHeader
     {
-        public FilteredLinksHeader(IFilterMetadataProvider filterMetadata, IPaginationMetadata metadata, IUrlHelper urlHelper, string routeName)
+        public FilteredLinksHeader(IFilterMetadataProvider filterMetadata, IPaginationLinkValues metadata, IUrlHelper urlHelper, string routeName)
             : base(metadata, urlHelper, routeName)
         {
             _filterMetadata = filterMetadata;

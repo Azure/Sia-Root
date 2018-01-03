@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using Sia.Shared.Protocol.Pagination;
 using Sia.Shared.Validation;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,11 @@ namespace Sia.Shared.Protocol
 {
     public class LinksHeader
     {
-        private IPaginationMetadata _metadata;
+        private IPaginationLinkValues _metadata;
         private IUrlHelper _urlHelper;
         private string _routeName;
 
-        public LinksHeader(IPaginationMetadata metadata, IUrlHelper urlHelper, string routeName)
+        public LinksHeader(IPaginationLinkValues metadata, IUrlHelper urlHelper, string routeName)
         {
             _metadata = ThrowIf.Null(metadata, nameof(metadata));
             _urlHelper = ThrowIf.Null(urlHelper, nameof(urlHelper));
