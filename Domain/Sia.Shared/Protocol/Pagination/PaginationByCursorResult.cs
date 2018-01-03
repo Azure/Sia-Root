@@ -7,7 +7,7 @@ namespace Sia.Shared.Protocol.Pagination
 {
     public class PaginationByCursorResult<TSource, TDestination, TCursor>
         : IPaginationResultMetadata<TDestination>
-        where TCursor : IComparable<TCursor>
+        where TCursor : IComparable<TCursor>, IPaginationCursor<TCursor>
     {
         public PaginationByCursorResult(
             PaginationByCursorRequest<TSource, TDestination, TCursor> request,
@@ -24,15 +24,10 @@ namespace Sia.Shared.Protocol.Pagination
         public int MaxPageSize => _request.MaxPageSize;
         public long TotalRecords { get; }
         public long TotalPages => (TotalRecords / MaxPageSize) + (TotalRecords % MaxPageSize > 0 ? 1 : 0);
-        public TCursor FirstResult
-            => ReadingInOrder
-                ? _request.DtoValueSelector(QueryResult[0])
-                : _request.DtoValueSelector(QueryResult[QueryResult.Count]);
-        public TCursor LastResult 
-            => ReadingInOrder
-                ? _request.DtoValueSelector(QueryResult[QueryResult.Count])
-                : _request.DtoValueSelector(QueryResult[0]);
-        public bool ReadingInOrder => _request.SortOrderBool == _request.CursorDirectionBool;
+        public TCursor FirstResult => _request.DtoValueSelector(QueryResult[0]);
+
+        public TCursor LastResult  => _request.DtoValueSelector(QueryResult[QueryResult.Count - 1]);
+        public bool ReadingInOrder => _request.SortOrderBool == _request.SeekDirectionBool;
 
         public bool NextPageExists
             => true;
@@ -51,15 +46,13 @@ namespace Sia.Shared.Protocol.Pagination
                 {
                     yield return item;
                 }
-                var cursorDirection = _request.TranslateFromDirectionalBool(
-                    ReadingInOrder
-                    ? _request.CursorDirectionBool
-                    : !_request.CursorDirectionBool);
-                var cursorValue = ReadingInOrder
-                    ? LastResult
-                    : FirstResult;
-                yield return new KeyValuePair<string, string>(nameof(_request.CursorDirection), cursorDirection);
-                yield return new KeyValuePair<string, string>(nameof(_request.CursorValue), cursorValue.ToString());
+                foreach (var item in LastResult.SerializationTokens())
+                {
+                    yield return item;
+                }
+                var cursorDirection = _request.TranslateFromDirectionalBool(_request.SeekDirectionBool);
+
+                yield return new KeyValuePair<string, string>(nameof(_request.SeekDirection), cursorDirection);
             }
         }
 
@@ -71,12 +64,13 @@ namespace Sia.Shared.Protocol.Pagination
                 {
                     yield return item;
                 }
-                var cursorDirection = _request.TranslateFromDirectionalBool(!_request.CursorDirectionBool);
-                var cursorValue = ReadingInOrder
-                    ? FirstResult
-                    : LastResult;
-                yield return new KeyValuePair<string, string>(nameof(_request.CursorDirection), cursorDirection);
-                yield return new KeyValuePair<string, string>(nameof(_request.CursorValue), cursorValue.ToString());
+                foreach (var item in FirstResult.SerializationTokens())
+                {
+                    yield return item;
+                }
+                var cursorDirection = _request.TranslateFromDirectionalBool(!_request.SeekDirectionBool);
+                    
+                yield return new KeyValuePair<string, string>(nameof(_request.SeekDirection), cursorDirection);
             }
         }
 
@@ -91,8 +85,8 @@ namespace Sia.Shared.Protocol.Pagination
         protected IEnumerable<KeyValuePair<string, string>> SharedHeaderValues()
         {
             var cursorDirection = ReadingInOrder
-                    ? _request.TranslateFromDirectionalBool(!_request.CursorDirectionBool)
-                    : _request.CursorDirection;
+                    ? _request.TranslateFromDirectionalBool(!_request.SeekDirectionBool)
+                    : _request.SeekDirection;
             yield return new KeyValuePair<string, string>(nameof(MaxPageSize), MaxPageSize.ToString());
             yield return new KeyValuePair<string, string>(nameof(TotalRecords), TotalRecords.ToString());
             yield return new KeyValuePair<string, string>(nameof(TotalPages), TotalPages.ToString());

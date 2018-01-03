@@ -53,12 +53,41 @@ namespace Sia.Shared.Tests.Protocol.Pagination
     }
 
     public class SimplePaginationByCursorRequest
-        : PaginationByCursorRequest<SimplePaginatableEntity, SimplePaginatableDto, long>
+        : PaginationByCursorRequest<SimplePaginatableEntity, SimplePaginatableDto, SimplePaginationCursor>
     {
-        protected override Expression<Func<SimplePaginatableEntity, long>> DataValueSelector
-            => (entity) => entity.TestIndexedProperty;
+        public long CursorIndex { get; set; }
+        protected override Expression<Func<SimplePaginatableEntity, SimplePaginationCursor>> DataValueSelector
+            => (entity) => new SimplePaginationCursor()
+            {
+                CursorIndex = entity.TestIndexedProperty
+            };
 
-        public override Func<SimplePaginatableDto, long> DtoValueSelector
-            => (dto) => dto.TestIndexedProperty;
+        public override Func<SimplePaginatableDto, SimplePaginationCursor> DtoValueSelector
+            => (dto) => new SimplePaginationCursor()
+            {
+                CursorIndex = dto.TestIndexedProperty
+            };
+
+        public override SimplePaginationCursor CursorValue => new SimplePaginationCursor()
+        {
+            CursorIndex = CursorIndex
+        };
+}
+
+    public class SimplePaginationCursor
+        : IComparable<SimplePaginationCursor>,
+        IPaginationCursor<SimplePaginationCursor>
+    {
+        public long CursorIndex { get; set; }
+
+        public int CompareTo(SimplePaginationCursor other)
+            => CursorIndex.CompareTo(other.CursorIndex);
+        public bool IsInitialized()
+            => !CursorIndex.Equals(default(long));
+
+        public IEnumerable<KeyValuePair<string, string>> SerializationTokens()
+        {
+            yield return new KeyValuePair<string, string>(nameof(CursorIndex), CursorIndex.ToString());
+        }
     }
 }
