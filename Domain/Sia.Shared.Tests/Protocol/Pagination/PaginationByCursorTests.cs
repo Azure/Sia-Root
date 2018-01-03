@@ -34,7 +34,7 @@ namespace Sia.Shared.Tests.Protocol.Pagination
             Assert.AreEqual(199, result.QueryResult[0].TestIndexedProperty);
             Assert.AreEqual(150, result.QueryResult[49].TestIndexedProperty);
             //Set expected final value
-            Assert.AreEqual(150, result.FinalValue);
+            Assert.AreEqual(150, result.LastResult);
             //No previous page
             Assert.IsFalse(result.PreviousPageExists);
             //Next page exists
