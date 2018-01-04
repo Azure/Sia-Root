@@ -24,9 +24,9 @@ namespace Sia.Shared.Protocol.Pagination
         public int MaxPageSize => _request.MaxPageSize;
         public long TotalRecords { get; }
         public long TotalPages => (TotalRecords / MaxPageSize) + (TotalRecords % MaxPageSize > 0 ? 1 : 0);
-        public TCursor FirstResult => _request.DtoValueSelector(QueryResult[0]);
+        public TCursor FirstResult => _request.Selectors().DtoValueSelector(QueryResult[0]);
 
-        public TCursor LastResult  => _request.DtoValueSelector(QueryResult[QueryResult.Count - 1]);
+        public TCursor LastResult  => _request.Selectors().DtoValueSelector(QueryResult[QueryResult.Count - 1]);
         public bool ReadingInOrder => _request.SortOrderBool == _request.SeekDirectionBool;
 
         public bool NextPageExists
@@ -42,10 +42,6 @@ namespace Sia.Shared.Protocol.Pagination
         {
             get
             {
-                foreach (var item in SharedHeaderValues())
-                {
-                    yield return item;
-                }
                 foreach (var item in LastResult.SerializationTokens())
                 {
                     yield return item;
@@ -53,6 +49,8 @@ namespace Sia.Shared.Protocol.Pagination
                 var cursorDirection = _request.TranslateFromDirectionalBool(_request.SeekDirectionBool);
 
                 yield return new KeyValuePair<string, string>(nameof(_request.SeekDirection), cursorDirection);
+                yield return new KeyValuePair<string, string>(nameof(_request.SortOrder), _request.SortOrder);
+                yield return new KeyValuePair<string, string>(nameof(MaxPageSize), MaxPageSize.ToString());
             }
         }
 
@@ -60,10 +58,6 @@ namespace Sia.Shared.Protocol.Pagination
         {
             get
             {
-                foreach (var item in SharedHeaderValues())
-                {
-                    yield return item;
-                }
                 foreach (var item in FirstResult.SerializationTokens())
                 {
                     yield return item;
@@ -71,23 +65,13 @@ namespace Sia.Shared.Protocol.Pagination
                 var cursorDirection = _request.TranslateFromDirectionalBool(!_request.SeekDirectionBool);
                     
                 yield return new KeyValuePair<string, string>(nameof(_request.SeekDirection), cursorDirection);
+                yield return new KeyValuePair<string, string>(nameof(_request.SortOrder), _request.SortOrder);
+                yield return new KeyValuePair<string, string>(nameof(MaxPageSize), MaxPageSize.ToString());
             }
         }
 
         public IEnumerable<KeyValuePair<string, string>> PaginationHeaderValues()
         {
-            foreach (var item in SharedHeaderValues())
-            {
-                yield return item;
-            }
-        }
-
-        protected IEnumerable<KeyValuePair<string, string>> SharedHeaderValues()
-        {
-            var cursorDirection = ReadingInOrder
-                    ? _request.TranslateFromDirectionalBool(!_request.SeekDirectionBool)
-                    : _request.SeekDirection;
-            yield return new KeyValuePair<string, string>(nameof(MaxPageSize), MaxPageSize.ToString());
             yield return new KeyValuePair<string, string>(nameof(TotalRecords), TotalRecords.ToString());
             yield return new KeyValuePair<string, string>(nameof(TotalPages), TotalPages.ToString());
             yield return new KeyValuePair<string, string>(nameof(_request.SortOrder), _request.SortOrder);

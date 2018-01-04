@@ -13,10 +13,10 @@ namespace Sia.Shared.Protocol.Pagination
         : IPaginationRequest<TSource, TDestination>
         where TCursor : IComparable<TCursor>, IPaginationCursor<TCursor>
     {
-        public abstract TCursor CursorValue { get; }
-        public int MaxPageSize { get; } = 50;
-        public bool SeekDirectionBool = false;
-        public bool SortOrderBool = false;
+        public abstract TCursor GetCursorValue();
+        public int MaxPageSize { get; set; } = 50;
+        public bool SeekDirectionBool { get; set; } = false;
+        public bool SortOrderBool { get; set; } = false;
 
         /// <summary>
         /// If "asc" / true, result values will be greater than or equal to CursorValue,
@@ -39,27 +39,27 @@ namespace Sia.Shared.Protocol.Pagination
             get => TranslateFromDirectionalBool(SortOrderBool);
             set => SortOrderBool = TranslateToDirectionalBool(value);
         }
-        
+
 
 
         public async Task<PaginationByCursorResult<TSource, TDestination, TCursor>> GetFullyTypedResultAsync(IQueryable<TSource> source)
         {
-            var filteredRecords = CursorValue.IsInitialized()
+            var filteredRecords = GetCursorValue().IsInitialized()
                 ? source
                     .Where(ValidRecord)
                 : source;
 
             var recordsInSeekOrder = SeekDirectionBool
-                ? filteredRecords.OrderBy(DataValueSelector)
-                : filteredRecords.OrderByDescending(DataValueSelector);
+                ? filteredRecords.OrderBy(Selectors().DataValueSelector)
+                : filteredRecords.OrderByDescending(Selectors().DataValueSelector);
 
             var resultSet = recordsInSeekOrder
                 .Take(MaxPageSize);
 
             var resultsInSortOrder = SortOrderBool
-                ? resultSet.OrderBy(DataValueSelector)
-                : resultSet.OrderByDescending(DataValueSelector);
-            
+                ? resultSet.OrderBy(Selectors().DataValueSelector)
+                : resultSet.OrderByDescending(Selectors().DataValueSelector);
+
             var resultsQuery = resultsInSortOrder
                 .ProjectTo<TDestination>()
                 .ToListAsync();
@@ -78,26 +78,12 @@ namespace Sia.Shared.Protocol.Pagination
         protected Expression<Func<TSource, bool>> ValidRecord
             => (record)
             => SeekDirectionBool
-                ? CompiledCursorSelector(record).CompareTo(CursorValue) > 0
+                ? Selectors().CompiledCursorSelector(record).CompareTo(GetCursorValue()) > 0
                 //Return values are greater than CursorValue
-                : CompiledCursorSelector(record).CompareTo(CursorValue) < 0;
+                : Selectors().CompiledCursorSelector(record).CompareTo(GetCursorValue()) < 0;
                 //Return values are less than CursorValue
 
-        public Func<TSource, TCursor> CompiledCursorSelector
-        {
-            get
-            {
-                if (_compiledCursorSelector is null)
-                {
-                    _compiledCursorSelector = DataValueSelector.Compile();
-                }
-                return _compiledCursorSelector;
-            }
-        }
-
-        private Func<TSource, TCursor> _compiledCursorSelector;
-        protected abstract Expression<Func<TSource, TCursor>> DataValueSelector { get; }
-        public abstract Func<TDestination, TCursor> DtoValueSelector { get; }
+        public abstract IPaginationByCursorSelectors<TSource, TDestination, TCursor> Selectors();
         public string TranslateFromDirectionalBool(bool value)
             => value
                 ? "asc"

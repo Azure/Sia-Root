@@ -56,7 +56,20 @@ namespace Sia.Shared.Tests.Protocol.Pagination
         : PaginationByCursorRequest<SimplePaginatableEntity, SimplePaginatableDto, SimplePaginationCursor>
     {
         public long CursorIndex { get; set; }
-        protected override Expression<Func<SimplePaginatableEntity, SimplePaginationCursor>> DataValueSelector
+
+        public override IPaginationByCursorSelectors<SimplePaginatableEntity, SimplePaginatableDto, SimplePaginationCursor> Selectors()
+            => _selectors;
+        private SimplePaginationByCursorSelectors _selectors = new SimplePaginationByCursorSelectors();
+        public override SimplePaginationCursor GetCursorValue() => new SimplePaginationCursor()
+            {
+                CursorIndex = CursorIndex
+            };
+    }
+
+    public class SimplePaginationByCursorSelectors
+        : PaginationByCursorSelectors<SimplePaginatableEntity, SimplePaginatableDto, SimplePaginationCursor>
+    {
+        public override Expression<Func<SimplePaginatableEntity, SimplePaginationCursor>> DataValueSelector
             => (entity) => new SimplePaginationCursor()
             {
                 CursorIndex = entity.TestIndexedProperty
@@ -67,12 +80,7 @@ namespace Sia.Shared.Tests.Protocol.Pagination
             {
                 CursorIndex = dto.TestIndexedProperty
             };
-
-        public override SimplePaginationCursor CursorValue => new SimplePaginationCursor()
-        {
-            CursorIndex = CursorIndex
-        };
-}
+    }
 
     public class SimplePaginationCursor
         : IComparable<SimplePaginationCursor>,
