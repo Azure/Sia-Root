@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using Sia.Shared.Protocol.Pagination;
+using Sia.Shared.Validation;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,15 +12,15 @@ namespace Sia.Shared.Protocol
 {
     public class LinksHeader
     {
-        private PaginationMetadata _metadata;
+        private IPaginationLinkValues _metadata;
         private IUrlHelper _urlHelper;
         private string _routeName;
 
-        public LinksHeader(PaginationMetadata metadata, IUrlHelper urlHelper, string routeName)
+        public LinksHeader(IPaginationLinkValues metadata, IUrlHelper urlHelper, string routeName)
         {
-            _metadata = metadata;
-            _urlHelper = urlHelper;
-            _routeName = routeName;
+            _metadata = ThrowIf.Null(metadata, nameof(metadata));
+            _urlHelper = ThrowIf.Null(urlHelper, nameof(urlHelper));
+            _routeName = ThrowIf.NullOrWhiteSpace(routeName, nameof(routeName));
         }
 
         public const string HeaderName = "links";
@@ -26,12 +28,12 @@ namespace Sia.Shared.Protocol
 
         protected virtual IEnumerable<KeyValuePair<string, string>> _headerValues()
         {
-            yield return new KeyValuePair<string, string>("PageNumber", _metadata.PageNumber.ToString());
-            yield return new KeyValuePair<string,string>("PageSize", _metadata.PageSize.ToString());
-            yield return new KeyValuePair<string,string>("TotalRecords", _metadata.TotalRecords.ToString());
-            yield return new KeyValuePair<string,string>("TotalPages", _metadata.TotalPages.ToString());
-            if (_metadata.NextPageExists) yield return new KeyValuePair<string,string>("NextPageLink", _nextPageLink);
-            if (_metadata.PreviousPageExists) yield return new KeyValuePair<string,string>("PrevPageLink", _previousPageLink);
+            foreach (var headerValue in _metadata.PaginationHeaderValues())
+            {
+                yield return headerValue;
+            }
+            if (_metadata.NextPageExists) yield return new KeyValuePair<string, string>("NextPageLink", _nextPageLink);
+            if (_metadata.PreviousPageExists) yield return new KeyValuePair<string, string>("PrevPageLink", _previousPageLink);
         }
 
 
