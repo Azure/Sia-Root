@@ -8,7 +8,7 @@ namespace Sia.Shared.Protocol.Pagination
     public interface IPaginationByCursorSelectors<TSource, TDestination, TCursor>
     {
         Func<TDestination, TCursor> DtoValueSelector { get; }
-        Expression<Func<TSource, TCursor>> DataValueSelector { get; }
+        Expression<Func<TSource, TCursor>> CursorSelector { get; }
         Func<TSource, TCursor> CompiledCursorSelector { get; }
     }
 
@@ -21,14 +21,14 @@ namespace Sia.Shared.Protocol.Pagination
             {
                 if (_compiledCursorSelector is null)
                 {
-                    _compiledCursorSelector = DataValueSelector.Compile();
+                    _compiledCursorSelector = CursorSelector.Compile();
                 }
                 return _compiledCursorSelector;
             }
         }
 
         private Func<TSource, TCursor> _compiledCursorSelector;
-        public abstract Expression<Func<TSource, TCursor>> DataValueSelector { get; }
+        public abstract Expression<Func<TSource, TCursor>> CursorSelector { get; }
         public abstract Func<TDestination, TCursor> DtoValueSelector { get; }
     }
 }

@@ -50,15 +50,15 @@ namespace Sia.Shared.Protocol.Pagination
                 : source;
 
             var recordsInSeekOrder = SeekDirectionBool
-                ? filteredRecords.OrderBy(Selectors().DataValueSelector)
-                : filteredRecords.OrderByDescending(Selectors().DataValueSelector);
+                ? filteredRecords.OrderBy(Selectors().CursorSelector)
+                : filteredRecords.OrderByDescending(Selectors().CursorSelector);
 
             var resultSet = recordsInSeekOrder
                 .Take(MaxPageSize);
 
             var resultsInSortOrder = SortOrderBool
-                ? resultSet.OrderBy(Selectors().DataValueSelector)
-                : resultSet.OrderByDescending(Selectors().DataValueSelector);
+                ? resultSet.OrderBy(Selectors().CursorSelector)
+                : resultSet.OrderByDescending(Selectors().CursorSelector);
 
             var resultsQuery = resultsInSortOrder
                 .ProjectTo<TDestination>()

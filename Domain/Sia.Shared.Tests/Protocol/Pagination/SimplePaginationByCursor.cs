@@ -69,7 +69,7 @@ namespace Sia.Shared.Tests.Protocol.Pagination
     public class SimplePaginationByCursorSelectors
         : PaginationByCursorSelectors<SimplePaginatableEntity, SimplePaginatableDto, SimplePaginationCursor>
     {
-        public override Expression<Func<SimplePaginatableEntity, SimplePaginationCursor>> DataValueSelector
+        public override Expression<Func<SimplePaginatableEntity, SimplePaginationCursor>> CursorSelector
             => (entity) => new SimplePaginationCursor()
             {
                 CursorIndex = entity.TestIndexedProperty
