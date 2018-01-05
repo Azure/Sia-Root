@@ -5,7 +5,7 @@ using System.Text;
 namespace Sia.Shared.Protocol.Pagination
 {
     public class TimelinePaginationCursor
-        : IPaginationCursor<TimelinePaginationCursor>,
+        : IPaginationCursor,
         IComparable<TimelinePaginationCursor>
     {
         public long CursorId { get; set; }

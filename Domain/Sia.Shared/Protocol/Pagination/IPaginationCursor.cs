@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Sia.Shared.Protocol.Pagination
 {
-    public interface IPaginationCursor<TCursor>
+    public interface IPaginationCursor
     {
         IEnumerable<KeyValuePair<string, string>> SerializationTokens();
         bool IsInitialized();

@@ -84,7 +84,7 @@ namespace Sia.Shared.Tests.Protocol.Pagination
 
     public class SimplePaginationCursor
         : IComparable<SimplePaginationCursor>,
-        IPaginationCursor<SimplePaginationCursor>
+        IPaginationCursor
     {
         public long CursorIndex { get; set; }
 

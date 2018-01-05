@@ -11,7 +11,7 @@ namespace Sia.Shared.Protocol.Pagination
 {
     public abstract class PaginationByCursorRequest<TSource, TDestination, TCursor>
         : IPaginationRequest<TSource, TDestination>
-        where TCursor : IComparable<TCursor>, IPaginationCursor<TCursor>
+        where TCursor : IComparable<TCursor>, IPaginationCursor
     {
         public abstract TCursor GetCursorValue();
         public int MaxPageSize { get; set; } = 50;

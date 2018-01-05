@@ -7,7 +7,7 @@ namespace Sia.Shared.Protocol.Pagination
 {
     public class PaginationByCursorResult<TSource, TDestination, TCursor>
         : IPaginationResultMetadata<TDestination>
-        where TCursor : IComparable<TCursor>, IPaginationCursor<TCursor>
+        where TCursor : IComparable<TCursor>, IPaginationCursor
     {
         public PaginationByCursorResult(
             PaginationByCursorRequest<TSource, TDestination, TCursor> request,
