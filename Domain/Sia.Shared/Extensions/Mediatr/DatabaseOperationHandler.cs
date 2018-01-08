@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Sia.Shared.Requests
 {
-    public abstract class DatabaseOperationHandler<TContext, TRequest, TResult> : IAsyncRequestHandler<TRequest, TResult>
+    public abstract class DatabaseOperationHandler<TContext, TRequest, TResult> : IRequestHandler<TRequest, TResult>
         where TRequest : IRequest<TResult>
         where TContext : DbContext
     {
@@ -15,10 +16,10 @@ namespace Sia.Shared.Requests
             _context = context;
         }
 
-        public abstract Task<TResult> Handle(TRequest message);
+        public abstract Task<TResult> Handle(TRequest message, CancellationToken cancellationToken);
     }
 
-    public abstract class DatabaseOperationHandler<TContext, TRequest> : IAsyncRequestHandler<TRequest>
+    public abstract class DatabaseOperationHandler<TContext, TRequest> : IRequestHandler<TRequest>
         where TRequest : IRequest
         where TContext : DbContext
     {
@@ -29,6 +30,6 @@ namespace Sia.Shared.Requests
             _context = context;
         }
 
-        public abstract Task Handle(TRequest message);
+        public abstract Task Handle(TRequest message, CancellationToken cancellationToken);
     }
 }

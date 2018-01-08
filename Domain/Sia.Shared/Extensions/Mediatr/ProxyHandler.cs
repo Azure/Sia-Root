@@ -10,10 +10,11 @@ using Sia.Shared.Exceptions;
 using Newtonsoft.Json;
 using Sia.Shared.Requests;
 using System.Net.Http.Headers;
+using System.Threading;
 
 namespace Sia.Shared.Extensions.Mediatr
 {
-    public abstract class ProxyHandler<TRequest, TResult> : ProxyHandlerBase<TRequest>, IAsyncRequestHandler<TRequest, TResult>
+    public abstract class ProxyHandler<TRequest, TResult> : ProxyHandlerBase<TRequest>, IRequestHandler<TRequest, TResult>
         where TRequest : AuthenticatedRequest<TResult>
     {
         protected ProxyHandler(HttpClientLookup clientFactory, string endpointName) 
@@ -21,16 +22,16 @@ namespace Sia.Shared.Extensions.Mediatr
         {
         }
 
-        public virtual async Task<TResult> Handle(TRequest request)
+        public virtual async Task<TResult> Handle(TRequest request, CancellationToken cancellationToken)
         {
-            var httpResponse = await SendRequest(request);
+            var httpResponse = await SendRequest(request, cancellationToken);
             var logicalResponse = await Response<TResult>.Create(httpResponse);
             logicalResponse.ThrowExceptionOnUnsuccessfulStatus();
             return logicalResponse.Value;
         }
     }
 
-    public abstract class ProxyHandler<TRequest> : ProxyHandlerBase<TRequest>, IAsyncRequestHandler<TRequest>
+    public abstract class ProxyHandler<TRequest> : ProxyHandlerBase<TRequest>, IRequestHandler<TRequest>
         where TRequest : AuthenticatedRequest
     {
         protected ProxyHandler(HttpClientLookup clientFactory, string endpointName)
@@ -38,9 +39,9 @@ namespace Sia.Shared.Extensions.Mediatr
         {
         }
 
-        public virtual async Task Handle(TRequest request)
+        public virtual async Task Handle(TRequest request, CancellationToken cancellationToken)
         {
-            var httpResponse = await SendRequest(request);
+            var httpResponse = await SendRequest(request, cancellationToken);
             var logicalResponse = await Response.Create(httpResponse);
             logicalResponse.ThrowExceptionOnUnsuccessfulStatus();
         }
@@ -54,12 +55,12 @@ namespace Sia.Shared.Extensions.Mediatr
         protected abstract string RelativeUri(TRequest request);
         protected abstract object MessageContent(TRequest request);
 
-        protected virtual async Task<HttpResponseMessage> SendRequest(TRequest request)
+        protected virtual async Task<HttpResponseMessage> SendRequest(TRequest request, CancellationToken cancellationToken)
         {
             var message = new HttpRequestMessage(Method(), RelativeUri(request));
             AddContentToMessage(request, message);
             await AddAuthorizationToMessage(request, message);
-            return await _client.SendAsync(message);
+            return await _client.SendAsync(message, cancellationToken);
         }
         protected virtual void AddContentToMessage(TRequest request, HttpRequestMessage message)
         {
