@@ -9,6 +9,8 @@ namespace Sia.Shared.Protocol
         public int PageSize { get; set; } = 50;
         public long TotalRecords { get; set; }
         public long TotalPages => (TotalRecords / PageSize) + (TotalRecords % PageSize > 0 ? 1 : 0);
+
+
         public IDictionary<string, string> PreviousPageLinkInfo => new Dictionary<string, string>
         {
             { nameof(PageNumber), (PageNumber - 1).ToString() },

@@ -11,8 +11,8 @@ namespace Sia.Shared.Protocol
 {
     public class FilteredLinksHeader : LinksHeader
     {
-        public FilteredLinksHeader(IFilterMetadataProvider filterMetadata, PaginationMetadata metadata, IUrlHelper urlHelper, string routeName)
-            : base(metadata, urlHelper, routeName)
+        public FilteredLinksHeader(IFilterMetadataProvider filterMetadata, PaginationMetadata metadata, IUrlHelper urlHelper, string routeName, long incidentId)
+            : base(metadata, urlHelper, routeName, incidentId)
         {
             _filterMetadata = filterMetadata;
         }
