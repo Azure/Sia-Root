@@ -13,50 +13,60 @@ namespace Sia.Shared.Protocol
         private PaginationMetadata _metadata;
         private IUrlHelper _urlHelper;
         private string _routeName;
-        private long _incidentId;
+        private readonly OperationLinks _operationLinks;
+        private readonly RelationLinks _relationLinks;
 
-        public LinksHeader(PaginationMetadata metadata, IUrlHelper urlHelper, string routeName, long incidentId)
+        public LinksHeader(
+            PaginationMetadata metadata,
+            IUrlHelper urlHelper,
+            string routeName, 
+            OperationLinks operationLinks,
+            RelationLinks relationLinks)
         {
             _metadata = metadata;
             _urlHelper = urlHelper;
             _routeName = routeName;
-            _incidentId = incidentId;
+            _operationLinks = operationLinks;
+            _relationLinks = relationLinks;
         }
 
         public const string HeaderName = "links";
-        public string HeaderJson => getHeaderValues();
-
-        protected virtual IEnumerable<KeyValuePair<string, string>> _headerValues()
+        public string HeaderJson => JsonConvert.SerializeObject(getHeaderValues(), _serializationSettings());
+        protected JsonSerializerSettings _serializationSettings()
+            => new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            };
+        protected LinksForSerialization getHeaderValues()
         {
-            yield return new KeyValuePair<string, string>("PageNumber", _metadata.PageNumber.ToString());
-            yield return new KeyValuePair<string, string>("PageSize", _metadata.PageSize.ToString());
-            yield return new KeyValuePair<string, string>("TotalRecords", _metadata.TotalRecords.ToString());
-            yield return new KeyValuePair<string, string>("TotalPages", _metadata.TotalPages.ToString());         
+            var toReturn = new LinksForSerialization();
+            toReturn.Metadata = _metadata is null
+                ? null
+                : new Metadata()
+                {
+                    Pagination = new PaginationMetadataRecord()
+                    {
+                        PageNumber = _metadata.PageNumber.ToString(),
+                        PageSize = _metadata.PageSize.ToString(),
+                        TotalRecords = _metadata.TotalRecords.ToString(),
+                        TotalPages = _metadata.TotalPages.ToString()
+                    }
+                };
+            toReturn.Links = new LinksCollection()
+            {
+                Operations = _operationLinks,
+                Pagination = _metadata is null
+                    ? null
+                    : new PaginationLinks()
+                    {
+                        Previous = _previousPageLink,
+                        Next = _nextPageLink
+                    },
+                Related = _relationLinks
+            };
+            return toReturn;
         }
 
-        protected string getHeaderValues() {
-            string returnJsonHeader;
-            string paginationMetadata = FormatJson(_getPaginationValues());
-            string paginationLinks = FormatJson(_getPaginationLinks());
-            string singleOps = FormatJson(_getSingleOps());
-
-            
-
-            return returnJsonHeader;
-        }
-
-        //IDictoinary<string, object> is the value type in Ok();
-        protected IEnumerable<KeyValuePair<string, string>> _getPaginationLinks() {
-            if (_metadata.NextPageExists) yield return new KeyValuePair<string,string>("NextPageLink", _nextPageLink);
-            if (_metadata.PreviousPageExists) yield return new KeyValuePair<string,string>("PrevPageLink", _previousPageLink);
-        }
-
-        protected IEnumerable<KeyValuePair<string, string>> _getPaginationValues() {
-            yield return new KeyValuePair<string, string>("PageNumber", _metadata.PageNumber.ToString());
-            yield return new KeyValuePair<string, string>("PageSize", _metadata.PageSize.ToString());
-            yield return new KeyValuePair<string, string>("TotalRecords", _metadata.TotalRecords.ToString());
-            yield return new KeyValuePair<string, string>("TotalPages", _metadata.TotalPages.ToString());
-        }
 
         protected string _nextPageLink => _metadata.NextPageExists
             ? _urlHelper.Action(_routeName) + FormatUrl(_nextPageLinkValues)
@@ -72,14 +82,9 @@ namespace Sia.Shared.Protocol
 
         protected string UrlTokenFormat(KeyValuePair<string, string> token)
             => $"{token.Key}={token.Value}";
-        protected string JsonTokenFormat(KeyValuePair<string, string> token)
-            => $"\"{token.Key}\":\"{token.Value}\"";
 
         protected string FormatUrl(IEnumerable<KeyValuePair<string, string>> tokens)
             => "/?" + string.Join("&", tokens.Select(UrlTokenFormat));
-
-        protected string FormatJson(IEnumerable<KeyValuePair<string, string>> tokens)
-            => "{" + string.Join(",", tokens.Select(JsonTokenFormat)) + "}";
     }
 }
 
@@ -90,7 +95,7 @@ namespace Microsoft.AspNetCore.Mvc
 
     public static class PaginationExtensions
     {
-        public static void AddPagination(this IHeaderDictionary headers, LinksHeader header)
+        public static void AddLinksHeader(this IHeaderDictionary headers, LinksHeader header)
         {
             headers.Add("Access-Control-Expose-Headers", LinksHeader.HeaderName);
             headers.Add(LinksHeader.HeaderName, header.HeaderJson);

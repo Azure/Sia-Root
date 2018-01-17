@@ -11,16 +11,19 @@ namespace Sia.Shared.Protocol
 {
     public class FilteredLinksHeader : LinksHeader
     {
-        public FilteredLinksHeader(IFilterMetadataProvider filterMetadata, PaginationMetadata metadata, IUrlHelper urlHelper, string routeName, long incidentId)
-            : base(metadata, urlHelper, routeName, incidentId)
+        public FilteredLinksHeader(
+            IFilterMetadataProvider filterMetadata, 
+            PaginationMetadata metadata,
+            IUrlHelper urlHelper, 
+            string routeName,
+            OperationLinks operationLinks,
+            RelationLinks relationLinks)
+            : base(metadata, urlHelper, routeName, operationLinks, relationLinks)
         {
             _filterMetadata = filterMetadata;
         }
 
         protected IFilterMetadataProvider _filterMetadata;
-
-        protected override IEnumerable<KeyValuePair<string, string>> _headerValues() 
-            => base._headerValues().Concat(_filterMetadata.FilterValues());
 
         protected override IEnumerable<KeyValuePair<string, string>> _nextPageLinkValues
             => base._nextPageLinkValues.Concat(_filterMetadata.FilterValues());

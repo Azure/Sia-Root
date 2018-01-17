@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sia.Shared.Authentication;
 using Sia.Shared.Validation.Filters;
+using System.Linq;
 
 namespace Sia.Shared.Controllers
 {
