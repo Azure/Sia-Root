@@ -33,7 +33,7 @@ namespace Sia.Shared.Authentication
                 using (X509Store store = new X509Store("My", location))
                 {
                     store.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
-                    X509Certificate2Collection certificates = store.Certificates.Find(X509FindType.FindByThumbprint, _certThumbprint, false);
+                    X509Certificate2Collection certificates = store.Certificates.Find(X509FindType.FindByThumbprint, _certThumbprint, validOnly: false);
                     if (certificates.Count > 0)
                     {
                         return Task.FromResult(certificates[0]);
