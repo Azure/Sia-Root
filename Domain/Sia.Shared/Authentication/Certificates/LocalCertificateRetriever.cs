@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Sia.Shared.Validation;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -32,11 +33,13 @@ namespace Sia.Shared.Authentication
                 using (X509Store store = new X509Store("My", location))
                 {
                     store.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
-                    X509Certificate2Collection certificates = store.Certificates.Find(X509FindType.FindByThumbprint, _certThumbprint, true);
-
+                    X509Certificate2Collection certificates = store.Certificates.Find(X509FindType.FindByThumbprint, _certThumbprint, false);
                     if (certificates.Count > 0)
+                    {
                         return Task.FromResult(certificates[0]);
+                    }
                 }
+
             }
             throw new KeyNotFoundException("Could not find valid certificate");
         }
