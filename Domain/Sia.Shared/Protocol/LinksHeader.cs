@@ -55,7 +55,7 @@ namespace Sia.Shared.Protocol
             toReturn.Links = new LinksCollection()
             {
                 Operations = _operationLinks,
-                Pagination = _metadata is null
+                Pagination = _metadata == null || (!_metadata.PreviousPageExists && !_metadata.NextPageExists)
                     ? null
                     : new PaginationLinks()
                     {
@@ -69,10 +69,10 @@ namespace Sia.Shared.Protocol
 
 
         protected string _nextPageLink => _metadata.NextPageExists
-            ? _urlHelper.Action(_routeName) + FormatUrl(_nextPageLinkValues)
+            ? _urlHelper.Link(_routeName, new { }) + FormatUrl(_nextPageLinkValues)
             : null;
         protected string _previousPageLink => _metadata.PreviousPageExists
-            ? _urlHelper.Action(_routeName) + FormatUrl(_previousPageLinkValues)
+            ? _urlHelper.Link(_routeName, new { }) + FormatUrl(_previousPageLinkValues)
             : null;
 
         protected virtual IEnumerable<KeyValuePair<string, string>> _nextPageLinkValues
