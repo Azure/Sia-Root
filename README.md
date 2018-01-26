@@ -14,19 +14,43 @@ Software systems are only as effective as they are reliable. As online services 
 ## The solution
 The SRE Incident Assistant (SIA) is designed to facilitate coordination, communication, and mitigation activities in 'worst case scenario' outages while gathering data for use in postmortem and process improvement.
 
+## Service Architecture Overview
+![SIA service architecture](SIA-Architecture.png)
+
+Definitions: 
+
+| Term | Definition | Repo |
+| ---- | ---------- | ---- |
+| **SIA Root** | Domain objects that make communication between the Gateway and Services easier | [https://github.com/Azure/Sia-Root](https://github.com/Azure/Sia-Root) |
+| **Incident Management Data Source** | A ticketing system | 
+| **ICM Connector** | Connects an event source to the SIA Gateway | [https://github.com/Azure/Sia-Gateway/tree/master/src/Sia.Connectors.Tickets](https://github.com/Azure/Sia-Gateway/tree/master/src/Sia.Connectors.Tickets) (part of the Sia-Gateway project)|
+| **SIA Gateway** | Web API service that receives events, sends events to the Event UI, and to other services | [https://github.com/Azure/Sia-Gateway](https://github.com/Azure/Sia-Gateway) |
+| **Services** | Third party services receive events and respond (e.g. with suggested courses of action) based on their internal business logic. Use the Domain objects defined in [Sia-Root](https://github.com/Azure/Sia-Root) | You create services |
+| **Event UI** | User interface for SIA | [https://github.com/Azure/Sia-EventUI](https://github.com/Azure/Sia-EventUI) |
+
 # Quick Start
+Get up and running with a local resources.
+
 * [Install prerequisites](https://github.com/Azure/Sia-Root/blob/master/HOWTOCONTRIBUTE.md#installing-prerequisites)
-  * For Windows Users, the PowerShell script (installEventUI.ps1) can help installing the prerequisites, as well as cloning the UI repos.
+  * For Windows Users, the PowerShell script (`installEventUI.ps1`) can help installing the prerequisites, as well as cloning the UI repos.
 * Clone the repos:
-  * Gateway: git clone [https://github.com/Azure/Sia-Gateway](https://github.com/Azure/Sia-Gateway)
-  * UI: git clone [https://github.com/Azure/Sia-EventUi](https://github.com/Azure/Sia-EventUi)
-* Init the submodule from the gateway root directory
-  * git submodule init
-  * git submodule update --remote
+  * **Gateway:** [https://github.com/Azure/Sia-Gateway](https://github.com/Azure/Sia-Gateway) (Make sure to initalize the submodules)
+  ```
+  git clone https://github.com/Azure/Sia-Root
+  git submodule init
+  git submodule update
+  ```    
+  * **UI:** git clone [https://github.com/Azure/Sia-EventUi](https://github.com/Azure/Sia-EventUi)
+  ```
+  git clone https://github.com/Azure/Sia-EventUi
+  ```
+
 * Update the [configurations](https://github.com/Azure/Sia-Root/blob/master/HOWTOCONTRIBUTE.md#development-workflow)
-* Launch Gateway form Visual Studio 2017 or Visual Studio Code
-* Start UI with npm
-  * npm start
+* Launch
+  * Additional services
+  * Gateway (Follow instructions at [https://github.com/Azure/Sia-Gateway](https://github.com/Azure/Sia-Gateway))
+  * Event UI (Follow instructions at [https://github.com/Azure/Sia-EventUI](https://github.com/Azure/Sia-EventUI)) (`npm start` for local development)
+
 * Open [http://localhost:3000](http://localhost:3000) in your browser, and voilà
   
 ## Contributing

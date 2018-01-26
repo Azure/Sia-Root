@@ -23,11 +23,11 @@ Issues labeled beginner are good candidates to pick up if you are in the code fo
 ## Configurations
 ### For Development
 * Follow instructions in the README.md files in each of the child repositories.
-   * [Sia-Gateway](https://github.com/Azure/Sia-Gateway/blob/master/src/Sia.Gateway/README.md) (located in <code>Sia-Gateway/src/Sia.Gateway/README.md</code>)
-   * [Sia-EventUi](https://github.com/Azure/Sia-EventUI/blob/master/README.md) (located in <code>Sia-EventUI/README.md</code>)
+   * [Sia-Gateway](https://github.com/Azure/Sia-Gateway) (located in `README.md`)
+   * [Sia-EventUi](https://github.com/Azure/Sia-EventUI/blob/master/README.md) (located in `README.md`)
    
 ### For A Functional, Authenticated Environment
-//Todo: Instructions for configuring Azure resources
+// Todo: Instructions for configuring Azure resources
 
 ## Build
 Launch Gateway from VS2017 or VS Code
