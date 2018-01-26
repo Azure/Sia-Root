@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Sia.Shared.Protocol
 {
@@ -31,13 +28,13 @@ namespace Sia.Shared.Protocol
         }
 
         public const string HeaderName = "links";
-        public string HeaderJson => JsonConvert.SerializeObject(getHeaderValues(), _serializationSettings());
+        public string HeaderJson => JsonConvert.SerializeObject(GetHeaderValues(), _serializationSettings());
         protected JsonSerializerSettings _serializationSettings()
             => new JsonSerializerSettings()
             {
                 NullValueHandling = NullValueHandling.Ignore
             };
-        protected LinksForSerialization getHeaderValues()
+        public LinksForSerialization GetHeaderValues()
         {
             var toReturn = new LinksForSerialization();
             toReturn.Metadata = _metadata is null
