@@ -2,11 +2,14 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Sia.Shared.Data;
 
 namespace Sia.Shared.Protocol
 {
     public class LinksHeader
     {
+        private IFilterMetadataProvider _filterMetadata;
         private PaginationMetadata _metadata;
         private IUrlHelper _urlHelper;
         private string _routeName;
@@ -14,12 +17,14 @@ namespace Sia.Shared.Protocol
         private readonly RelationLinks _relationLinks;
 
         public LinksHeader(
+            IFilterMetadataProvider filterMetadata,
             PaginationMetadata metadata,
             IUrlHelper urlHelper,
             string routeName, 
             OperationLinks operationLinks,
             RelationLinks relationLinks)
         {
+            _filterMetadata = filterMetadata;
             _metadata = metadata;
             _urlHelper = urlHelper;
             _routeName = routeName;
@@ -52,7 +57,7 @@ namespace Sia.Shared.Protocol
             toReturn.Links = new LinksCollection()
             {
                 Operations = _operationLinks,
-                Pagination = _metadata == null || (!_metadata.PreviousPageExists && !_metadata.NextPageExists)
+                Pagination = (_metadata == null || (!_metadata.PreviousPageExists && !_metadata.NextPageExists)) && _filterMetadata == null
                     ? null
                     : new PaginationLinks()
                     {
@@ -66,16 +71,32 @@ namespace Sia.Shared.Protocol
 
 
         protected string _nextPageLink => _metadata.NextPageExists
-            ? _urlHelper.Link(_routeName, new { }) + FormatUrl(_nextPageLinkValues)
+            ? _urlHelper.Link(_routeName, new { }) + FormatUrl(_nextPageLinkValues())
             : null;
         protected string _previousPageLink => _metadata.PreviousPageExists
-            ? _urlHelper.Link(_routeName, new { }) + FormatUrl(_previousPageLinkValues)
+            ? _urlHelper.Link(_routeName, new { }) + FormatUrl(_previousPageLinkValues())
             : null;
 
-        protected virtual IEnumerable<KeyValuePair<string, string>> _nextPageLinkValues
-            => _metadata.NextPageLinkInfo;
-        protected virtual IEnumerable<KeyValuePair<string, string>> _previousPageLinkValues
-            => _metadata.PreviousPageLinkInfo;
+        protected virtual IEnumerable<KeyValuePair<string, string>> _nextPageLinkValues()
+        {
+            var nextPageLinksValue = _metadata.NextPageLinkInfo;
+            if (_filterMetadata != null)
+            {
+                nextPageLinksValue.Concat(_filterMetadata.FilterValues());
+            }
+            return nextPageLinksValue;
+        }
+
+        protected virtual IEnumerable<KeyValuePair<string, string>> _previousPageLinkValues()
+        {
+            var previousPageLinksValue = _metadata.PreviousPageLinkInfo;
+            if (_filterMetadata != null)
+            {
+                previousPageLinksValue.Concat(_filterMetadata.FilterValues());
+            }
+
+            return previousPageLinksValue;
+        }
 
         protected string UrlTokenFormat(KeyValuePair<string, string> token)
             => $"{token.Key}={token.Value}";
