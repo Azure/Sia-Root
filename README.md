@@ -36,7 +36,7 @@ Get up and running with a local resources.
 * Clone the repos:
   * **Gateway:** [https://github.com/Azure/Sia-Gateway](https://github.com/Azure/Sia-Gateway) (Make sure to initalize the submodules)
   ```
-  git clone https://github.com/Azure/Sia-Root
+  git clone https://github.com/Azure/Sia-Gateway
   git submodule init
   git submodule update
   ```    
