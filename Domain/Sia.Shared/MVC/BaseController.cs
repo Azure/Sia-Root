@@ -3,13 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Sia.Shared.Authentication;
 using Sia.Shared.Validation.Filters;
-using Sia.Shared.Protocol;
-using System.Linq;
 
 namespace Sia.Shared.Controllers
 {
     [Return400BadRequestWhenModelStateInvalid]
-    //[Authorize()]
+    [Authorize()]
     public abstract class BaseController : Controller
     {
         protected readonly IMediator _mediator;

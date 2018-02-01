@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Sia.Shared.Data;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Sia.Shared.Data;
 
 namespace Sia.Shared.Protocol
 {
