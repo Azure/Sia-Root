@@ -11,7 +11,7 @@ namespace Sia.Shared.Extensions.Mediatr
 {
     public abstract class HandlerShortCircuit<TRequest, TResponse> 
         : IPipelineBehavior<TRequest, TResponse>
-        where TRequest : AuthenticatedRequest<TResponse>
+        where TRequest : IRequest<TResponse>
 
     {
         protected readonly IConfigurationRoot _config;
