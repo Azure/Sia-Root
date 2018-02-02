@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using Sia.Shared.Requests;
 using System.Net.Http.Headers;
 using System.Threading;
+using Microsoft.Extensions.Logging;
 
 namespace Sia.Shared.Extensions.Mediatr
 {
