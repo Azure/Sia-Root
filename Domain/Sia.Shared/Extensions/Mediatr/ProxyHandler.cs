@@ -2,6 +2,7 @@
 using Sia.Shared.Authentication.Http;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
@@ -57,10 +58,18 @@ namespace Sia.Shared.Extensions.Mediatr
 
         protected virtual async Task<HttpResponseMessage> SendRequest(TRequest request, CancellationToken cancellationToken)
         {
-            var message = new HttpRequestMessage(Method(), RelativeUri(request));
-            AddContentToMessage(request, message);
-            await AddAuthorizationToMessage(request, message);
-            return await _client.SendAsync(message, cancellationToken);
+            try
+            {
+                var message = new HttpRequestMessage(Method(), RelativeUri(request));
+                AddContentToMessage(request, message);
+                await AddAuthorizationToMessage(request, message);
+                var result = await _client.SendAsync(message, cancellationToken);
+                return result;
+            }
+            catch (HttpRequestException ex)
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
         }
         protected virtual void AddContentToMessage(TRequest request, HttpRequestMessage message)
         {
