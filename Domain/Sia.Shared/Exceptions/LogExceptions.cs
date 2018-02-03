@@ -1,17 +1,23 @@
 ﻿using Microsoft.Extensions.Logging;
+using Sia.Shared.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Sia.Shared.Exceptions
 {
-    public class LogExceptions
+    public static class LogExceptions
     {
-        private ILogger _logger;
-
-        public LogExceptions(ILogger logger)
+        public static void LogUnsuccessfulHttpRequests(this IResponse response, ILogger logger)
         {
-            _logger = logger;
+            if (response.IsSuccessStatusCode)
+            {
+                return;
+            }
+            var message = response.Content;
+
+            logger.LogWarning($"Unsuccessful HttpRequest of type {response.StatusCode}: {message}");
         }
+
     }
 }

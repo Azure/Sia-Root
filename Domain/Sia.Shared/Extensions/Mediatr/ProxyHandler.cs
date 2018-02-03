@@ -56,6 +56,7 @@ namespace Sia.Shared.Extensions.Mediatr
         protected abstract HttpMethod Method();
         protected abstract string RelativeUri(TRequest request);
         protected abstract object MessageContent(TRequest request);
+        protected ILogger _logger;
 
         protected virtual async Task<HttpResponseMessage> SendRequest(TRequest request, CancellationToken cancellationToken)
         {
