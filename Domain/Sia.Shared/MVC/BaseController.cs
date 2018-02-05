@@ -1,7 +1,11 @@
-﻿using MediatR;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Sia.Shared.Authentication;
+using Sia.Shared.Protocol;
 using Sia.Shared.Validation.Filters;
 
 namespace Sia.Shared.Controllers
@@ -23,6 +27,19 @@ namespace Sia.Shared.Controllers
             _mediator = mediator;
             _authConfig = authConfig;
             _urlHelper = urlHelper;
+        }
+
+        public IActionResult OkIfFound<TResponse>(TResponse response)
+        where TResponse : class
+        {
+            if (response == null || response == "null")
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(response);
+            }
         }
     }
 }

@@ -12,7 +12,6 @@ using Newtonsoft.Json;
 using Sia.Shared.Requests;
 using System.Net.Http.Headers;
 using System.Threading;
-using Microsoft.Extensions.Logging;
 
 namespace Sia.Shared.Extensions.Mediatr
 {
@@ -56,7 +55,6 @@ namespace Sia.Shared.Extensions.Mediatr
         protected abstract HttpMethod Method();
         protected abstract string RelativeUri(TRequest request);
         protected abstract object MessageContent(TRequest request);
-        protected ILogger _logger;
 
         protected virtual async Task<HttpResponseMessage> SendRequest(TRequest request, CancellationToken cancellationToken)
         {
