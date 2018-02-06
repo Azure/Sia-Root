@@ -41,5 +41,17 @@ namespace Sia.Shared.Controllers
                 return Ok(response);
             }
         }
+
+        public IActionResult OkIfAny<TResponse>(IEnumerable<TResponse> response)
+        {
+            if (response == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(response);
+            }
+        }
     }
 }
