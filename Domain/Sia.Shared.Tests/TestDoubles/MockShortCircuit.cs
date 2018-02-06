@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Sia.Gateway.Tests.TestDoubles
 {
-    internal class MockShortCircuit : HandlerShortCircuit<StubRequest, string>
+    internal class MockShortCircuit : HandlerShortCircuit<IRequest<string>, string>
     {
         private readonly bool _shouldRequestContinue;
         public MockShortCircuit(bool shouldRequestContinue) : base(null)
@@ -17,7 +17,7 @@ namespace Sia.Gateway.Tests.TestDoubles
             _shouldRequestContinue = shouldRequestContinue;
         }
 
-        public override Task<string> GenerateMockAsync(StubRequest request, CancellationToken cancellationToken)
+        public override Task<string> GenerateMockAsync(IRequest<string> request, CancellationToken cancellationToken)
         {
             return Task.FromResult("Next was not called");
         }
@@ -26,10 +26,5 @@ namespace Sia.Gateway.Tests.TestDoubles
         {
             return _shouldRequestContinue;
         }
-    }
-
-    public class StubRequest : IRequest<string>
-    {
-        
     }
 }
