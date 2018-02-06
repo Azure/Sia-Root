@@ -14,13 +14,10 @@ namespace Sia.Shared.Protocol
             var response = new Response<T>();
             response.IsSuccessStatusCode = message.IsSuccessStatusCode;
             response.StatusCode = message.StatusCode;
-            var content = await message.Content.ReadAsStringAsync();
             if (message.IsSuccessStatusCode)
             {
+                var content = await message.Content.ReadAsStringAsync();
                 response.Value = JsonConvert.DeserializeObject<T>(content);
-            }
-            else
-            {
                 response.Content = content;
             }
             return response;
