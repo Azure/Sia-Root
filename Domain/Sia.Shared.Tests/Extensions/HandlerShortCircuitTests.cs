@@ -11,14 +11,10 @@ namespace Sia.Shared.Tests.Extensions
     [TestClass]
     public class HandlerShortCircuitTests
     {
-        public Task<string> ReturnMockNext()
-        {
-            return Task.FromResult("Next result");
-        }
-
         [TestMethod]
         public async Task Handle_Should_Return_Next_If_ShouldRequestContinue_Is_True()
         {
+            Task<string> ReturnMockNext() => Task.FromResult("Next result");
             var mockShortCircuit = new MockShortCircuit(shouldRequestContinue: true);
 
             var result = await mockShortCircuit.Handle(null, new CancellationToken(), ReturnMockNext);
