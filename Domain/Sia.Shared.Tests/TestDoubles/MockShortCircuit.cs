@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Sia.Gateway.Tests.TestDoubles
 {
-    internal class MockShortCircuit : HandlerShortCircuit<IRequest<string>, string>
+    internal class MockShortCircuit : HandlerShortCircuit<IRequest<string>, string, string>
     {
         private readonly bool _shouldRequestContinue;
         public MockShortCircuit(bool shouldRequestContinue) : base(null)
@@ -22,7 +22,7 @@ namespace Sia.Gateway.Tests.TestDoubles
             return Task.FromResult("Next was not called");
         }
 
-        public override bool ShouldRequestContinue(IConfigurationRoot config)
+        public override bool ShouldRequestContinue(string config)
         {
             return _shouldRequestContinue;
         }
