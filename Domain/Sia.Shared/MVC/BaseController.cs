@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -29,29 +30,16 @@ namespace Sia.Shared.Controllers
             _urlHelper = urlHelper;
         }
 
-        public IActionResult OkIfFound<TResponse>(TResponse response)
+        public IActionResult OkIfFound<TResponse>(TResponse response, string notFoundMessage = "")
         where TResponse : class
-        {
-            if (response == null || response == "null")
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(response);
-            }
-        }
+            => (response == null || response.ToString() == "null")
+            ? (IActionResult)NotFound(notFoundMessage)
+            : Ok(response);
 
-        public IActionResult OkIfAny<TResponse>(IEnumerable<TResponse> response)
-        {
-            if (response == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(response);
-            }
-        }
+
+        public IActionResult OkIfAny<TResponse>(IEnumerable<TResponse> response, string notAnyMessage = "")
+            => (response == null || !response.Any())
+            ? (IActionResult)NotFound(notAnyMessage)
+            : Ok(response);
     }
 }
