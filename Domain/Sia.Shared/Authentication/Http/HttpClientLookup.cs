@@ -1,5 +1,6 @@
 ﻿using Sia.Shared.Exceptions;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -8,17 +9,17 @@ namespace Sia.Shared.Authentication.Http
 {
     public class HttpClientLookup
     {
-        private IDictionary<string, string> _endpointToBaseUrl;
-        private IDictionary<string, HttpClient> _endpointToHttpClient { get; }
+        private ConcurrentDictionary<string, string> _endpointToBaseUrl;
+        private ConcurrentDictionary<string, HttpClient> _endpointToHttpClient { get; }
 
         public HttpClientLookup()
         {
-            _endpointToBaseUrl = new Dictionary<string, string>();
-            _endpointToHttpClient = new Dictionary<string, HttpClient>();
+            _endpointToBaseUrl = new ConcurrentDictionary<string, string>();
+            _endpointToHttpClient = new ConcurrentDictionary<string, HttpClient>();
         }
 
         public void RegisterEndpoint(string endpointName, string baseUrl)
-            => _endpointToBaseUrl.Add(endpointName, baseUrl);
+            => _endpointToBaseUrl.TryAdd(endpointName, baseUrl);
 
         public HttpClient GetClientForEndpoint(string endpointName)
         {
@@ -27,7 +28,7 @@ namespace Sia.Shared.Authentication.Http
 
             var client = HttpClientExtensions.CreateHttpClient(baseUrl);
 
-            _endpointToHttpClient.Add(endpointName, client);
+            _endpointToHttpClient.TryAdd(endpointName, client);
 
             return client;
         }
