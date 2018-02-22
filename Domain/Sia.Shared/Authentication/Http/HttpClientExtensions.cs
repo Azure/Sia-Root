@@ -39,31 +39,11 @@ namespace System.Net.Http
 
         private static async Task<HttpRequestMessage> GenerateRequest(string requestUri, AuthenticatedUserContext authenticationInfo, HttpMethod method)
         {
-            var tokenResult = await AcquireTokenAsync(authenticationInfo);
+            var tokenResult = await authenticationInfo.AcquireTokenAsync();
 
             var request = new HttpRequestMessage(method, requestUri);
             request.Headers.Authorization = new AuthenticationHeaderValue(authenticationInfo.AuthConfig.Scheme, tokenResult);
             return request;
-        }
-
-        public static async Task<string> AcquireTokenAsync(AuthenticatedUserContext authenticationInfo)
-        {
-            //Todo: per-user auth based on delegated identity
-            //string userObjectID = (authenticationInfo.User.FindFirst("http://schemas.microsoft.com/identity/claims/objectidentifier"))?.Value;
-            string userObjectID = "Test";
-
-            var authContext = new AuthenticationContext(authenticationInfo.AuthConfig.Authority, new NaiveSessionCache(userObjectID, authenticationInfo.Session));
-            var credential = new ClientCredential(authenticationInfo.AuthConfig.ClientId, authenticationInfo.AuthConfig.ClientSecret);
-            try
-            {
-                var result = await authContext.AcquireTokenSilentAsync(authenticationInfo.AuthConfig.Resource, credential, new UserIdentifier(userObjectID, UserIdentifierType.UniqueId));
-                return result.AccessToken;
-            }
-            catch (AdalSilentTokenAcquisitionException)
-            {
-                var result = await authContext.AcquireTokenAsync(authenticationInfo.AuthConfig.Resource, credential);
-                return result.AccessToken;
-            }
         }
 
         public static HttpClient CreateHttpClient(string baseUrl)
