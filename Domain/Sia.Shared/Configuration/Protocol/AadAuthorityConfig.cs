@@ -23,7 +23,11 @@ namespace Sia.Shared.Configuration.Protocol
         /// Example value: contoso.onmicrosoft.com
         /// </summary>
         public string Tenant { get; set; }
-        public string Authority => String.Format(AadInstance, Tenant);
-        public string V2Authority => String.Format(V2AadInstance, Tenant);
+        public string Authority => String.IsNullOrWhiteSpace(AadInstance) || String.IsNullOrWhiteSpace(Tenant)
+            ? null
+            : String.Format(AadInstance, Tenant);
+        public string V2Authority => String.IsNullOrWhiteSpace(V2AadInstance) || String.IsNullOrWhiteSpace(Tenant)
+            ? null
+            : String.Format(V2AadInstance, Tenant);
     }
 }
