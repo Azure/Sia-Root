@@ -11,7 +11,7 @@ using Sia.Shared.Validation.Filters;
 namespace Sia.Shared.Controllers
 {
     [Return400BadRequestWhenModelStateInvalid]
-    //[Authorize()]
+    [Authorize()]
     public abstract class BaseController : Controller
     {
         protected readonly IMediator _mediator;
