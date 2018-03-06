@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using Sia.Shared.Requests;
 using System.Net.Http.Headers;
 using System.Threading;
+using Sia.Shared.Authentication;
 
 namespace Sia.Shared.Extensions.Mediatr
 {
@@ -81,7 +82,7 @@ namespace Sia.Shared.Extensions.Mediatr
         }
         protected virtual async Task AddAuthorizationToMessage(TRequest request, HttpRequestMessage message)
         {
-            var tokenResult = await HttpClientExtensions.AcquireTokenAsync(request.UserContext);
+            var tokenResult = await request.UserContext.AcquireTokenAsync();
             message.Headers.Authorization = new AuthenticationHeaderValue(request.UserContext.AuthConfig.Scheme, tokenResult);
         }
 

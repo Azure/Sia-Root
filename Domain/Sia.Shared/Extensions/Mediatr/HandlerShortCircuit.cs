@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace Sia.Shared.Extensions.Mediatr
 {
-    public abstract class HandlerShortCircuit<TRequest, TResponse> 
+    public abstract class HandlerShortCircuit<TRequest, TResponse, TConfig> 
         : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
 
     {
-        protected readonly IConfigurationRoot _config;
+        protected readonly TConfig _config;
 
-        protected HandlerShortCircuit(IConfigurationRoot config)
+        protected HandlerShortCircuit(TConfig config)
         {   
             _config = config;
         }
@@ -30,7 +30,7 @@ namespace Sia.Shared.Extensions.Mediatr
             return await GenerateMockAsync(request, cancellationToken);
         }
 
-        public abstract bool ShouldRequestContinue(IConfigurationRoot config);
+        public abstract bool ShouldRequestContinue(TConfig config);
 
         public abstract Task<TResponse> GenerateMockAsync(TRequest request, CancellationToken cancellationToken);
         
