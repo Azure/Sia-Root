@@ -1,9 +1,5 @@
-﻿using Sia.Domain;
-using Sia.Shared.Data;
+﻿using Sia.Shared.Data;
 using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Text;
 
 namespace Sia.Domain
 {
@@ -15,5 +11,6 @@ namespace Sia.Domain
         public DateTime Occurred { get; set; }
         public DateTime EventFired { get; set; }
         public object Data { get; set; }
+        public string PrimaryTicketId { get; set; }
     }
 }
