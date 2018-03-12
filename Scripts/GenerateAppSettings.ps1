@@ -6,14 +6,16 @@ param(
 [String]$ProjectPath,
 
 [parameter(Mandatory=$true,ParameterSetName = "Set 1")]
-[ValidateNotNullOrEmpty()]
 [String[]]$AdditionalConfigFiles,
 
 [parameter(Mandatory=$true,ParameterSetName = "Set 1")]
+[String]$AdditionalConfigurations,
+
+[parameter(Mandatory=$true,ParameterSetName = "Set 1")]
 [ValidateNotNullOrEmpty()]
-[String]$AdditionalConfigurations
+[String] $EnvironmentName
 )
-  
+
  $appSettings = '{}' | ConvertFrom-Json
  $appSettingFile = [IO.Path]::Combine($ProjectPath, 'appsettings.json')
  Write-Host "appSettingFile: $appSettingFile"
@@ -38,4 +40,6 @@ param(
  $appSettings = ($appSettings | ConvertTo-Json -Depth 10)
  Write-Host "appSettings: $appSettings" 
  
- $appSettings | out-file($appSettingFile)
+ $envFileName = 'appsettings.{0}.json' -f $EnvironmentName
+ $envAppSettingFile = [IO.Path]::Combine($ProjectPath, $envFileName)
+ $appSettings | out-file($envAppSettingFile)
