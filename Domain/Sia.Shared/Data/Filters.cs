@@ -7,29 +7,26 @@ using System.Text;
 
 namespace Sia.Shared.Data
 {
-    public interface IQueryFilterer<T>
+    public interface IFilterByMatch<T>
     {
-        IQueryable<T> Filter(IQueryable<T> source);
+        bool IsMatchFor(T toCompare);
     }
 
     public interface IFilterMetadataProvider
     {
         IEnumerable<KeyValuePair<string, string>> FilterValues();
     }
-    public abstract class Filters<T>
-        : IQueryFilterer<T>,
+    public interface IFilters<T>
+        : IFilterByMatch<T>,
         IFilterMetadataProvider
-    {
-        public abstract IQueryable<T> Filter(IQueryable<T> source);
-        public abstract IEnumerable<KeyValuePair<string, string>> FilterValues();
-    }
+    {}
 }
 
 namespace System.Linq
 {
     public static class FilterExtensions
     {
-        public static IQueryable<T> WithFilter<T>(this IQueryable<T> source, IQueryFilterer<T> filter)
-            => filter.Filter(source);
+        public static IQueryable<T> WithFilter<T>(this IQueryable<T> source, IFilterByMatch<T> filter)
+            => source.Where(t => filter.IsMatchFor(t));
     }
 }
