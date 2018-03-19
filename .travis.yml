@@ -1,0 +1,6 @@
+language: csharp
+mono: none
+dotnet: 2.1.4
+script:
+ - dotnet restore ./Domain/Sia.Domain.sln
+ - dotnet build ./Domain/Sia.Domain.sln
