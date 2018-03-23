@@ -1,0 +1,35 @@
+version: "3.3"
+
+services:
+  gateway:
+    image: "[your gateway image]"
+    container_name: gateway
+    hostname: gatewayhost
+    networks:
+      - sianet
+    ports:
+      - 50000:80
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ClientSecret: "[your gateway client secret]"
+  playbook:
+    image: "[your playbook image]"
+    container_name: playbook
+    networks:
+      - sianet
+    ports:
+      - 50001:80
+    environment:
+      ASPNETCORE_ENVIRONMENT: PPE
+      ClientSecret: "[your playbook client secret]" 
+  eventui:
+    image: "[your eventui localhost image]]"
+    container_name: eventui
+    networks:
+      - sianet
+    ports:
+      - 3000:3000
+
+networks:
+  sianet:
+    driver: bridge
