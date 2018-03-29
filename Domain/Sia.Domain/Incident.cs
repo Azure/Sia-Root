@@ -35,5 +35,6 @@ namespace Sia.Domain
             = new List<Event>();
         public ICollection<Engagement> Engagements { get; set; }
             = new List<Engagement>();
+        public object State { get; set; }
     }
 }
