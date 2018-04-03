@@ -2,10 +2,18 @@
 {
     public class UnauthorizedException : BaseException
     {
+        public override int StatusCode => 403;
+
         public UnauthorizedException(string message) : base(message)
         {
         }
 
-        public override int StatusCode => 403;
+        public UnauthorizedException()
+        {
+        }
+
+        public UnauthorizedException(string message, System.Exception innerException) : base(message, innerException)
+        {
+        }
     }
 }
