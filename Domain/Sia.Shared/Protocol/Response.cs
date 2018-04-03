@@ -9,18 +9,10 @@ namespace Sia.Shared.Protocol
     {
         public T Value { get; private set; }
 
-        public static new async Task<Response<T>> Create(HttpResponseMessage message)
+        public Response(HttpStatusCode statusCode, bool isSuccessCode, string content, T value) 
+            : base(statusCode, isSuccessCode, content)
         {
-            var response = new Response<T>();
-            response.IsSuccessStatusCode = message.IsSuccessStatusCode;
-            response.StatusCode = message.StatusCode;
-            if (message.IsSuccessStatusCode)
-            {
-                var content = await message.Content.ReadAsStringAsync();
-                response.Value = JsonConvert.DeserializeObject<T>(content);
-                response.Content = content;
-            }
-            return response;
+            this.Value = value;
         }
     }
 
@@ -29,12 +21,42 @@ namespace Sia.Shared.Protocol
         public HttpStatusCode StatusCode { get; protected set; }
         public bool IsSuccessStatusCode { get; protected set; }
         public string Content { get; protected set; }
-        public static async Task<Response> Create(HttpResponseMessage message)
-            => new Response()
+
+        public Response(HttpStatusCode statusCode, bool isSuccessCode, string content)
+        {
+            this.StatusCode = statusCode;
+            this.IsSuccessStatusCode = isSuccessCode;
+            this.Content = content;
+        }
+    }
+
+    public sealed class ResponseFactory
+    {
+        public static async Task<Response> CreateResponse(HttpResponseMessage message)
+            => new Response(
+                message.StatusCode,
+                message.IsSuccessStatusCode,
+                await message.Content.ReadAsStringAsync()
+            );
+
+
+        public static async Task<Response<T>> CreateResponse<T>(HttpResponseMessage message)
+        {
+            string content = string.Empty;
+            T value = default(T);
+
+            if (message.IsSuccessStatusCode)
             {
-                IsSuccessStatusCode = message.IsSuccessStatusCode,
-                StatusCode = message.StatusCode,
-                Content = await message.Content.ReadAsStringAsync()
-            };
+                content = await message.Content.ReadAsStringAsync();
+                value = JsonConvert.DeserializeObject<T>(content);
+            }
+
+            return new Response<T>(
+                message.StatusCode,
+                message.IsSuccessStatusCode,
+                content, 
+                value
+            );
+        }
     }
 }

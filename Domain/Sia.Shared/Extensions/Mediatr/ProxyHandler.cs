@@ -27,7 +27,7 @@ namespace Sia.Shared.Extensions.Mediatr
         public virtual async Task<TResult> Handle(TRequest request, CancellationToken cancellationToken)
         {
             var httpResponse = await SendRequest(request, cancellationToken);
-            var logicalResponse = await Response<TResult>.Create(httpResponse);
+            var logicalResponse = await ResponseFactory.CreateResponse <TResult>(httpResponse);
             logicalResponse.ThrowExceptionOnUnsuccessfulStatus();
             return logicalResponse.Value;
         }
@@ -44,7 +44,7 @@ namespace Sia.Shared.Extensions.Mediatr
         public virtual async Task Handle(TRequest request, CancellationToken cancellationToken)
         {
             var httpResponse = await SendRequest(request, cancellationToken);
-            var logicalResponse = await Response.Create(httpResponse);
+            var logicalResponse = await ResponseFactory.CreateResponse(httpResponse);
             logicalResponse.ThrowExceptionOnUnsuccessfulStatus();
         }
     }
