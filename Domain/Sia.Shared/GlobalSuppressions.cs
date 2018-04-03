@@ -10,4 +10,11 @@
     Justification = "<Pending>", 
     Scope = "module"
 )]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage(
+    "Design", 
+    "CA1032:Implement standard exception constructors", 
+    Justification = "Further review revealed that it's not worth keeping these constructors in the code given that we'll never explicitly invoke them", 
+    Scope = "module"
+)]
+
 
