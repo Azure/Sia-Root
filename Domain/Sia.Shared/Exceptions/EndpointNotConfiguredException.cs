@@ -10,13 +10,5 @@ namespace Sia.Shared.Exceptions
             : base($"No base URI was configured for ${endpointName}")
         {
         }
-
-        public EndpointNotConfiguredException()
-        {
-        }
-
-        public EndpointNotConfiguredException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
     }
 }
