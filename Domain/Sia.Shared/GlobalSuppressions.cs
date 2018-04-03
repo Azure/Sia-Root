@@ -7,7 +7,14 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage(
     "Design", 
     "CA1054:Uri parameters should not be strings", 
-    Justification = "<Pending>", 
+    Justification = "Causes breaking changes and the potential to require additional work around serialization/deserialization would significantly expand the scope of the effort to apply FxCop rules", 
+    Scope = "module"
+)]
+
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage(
+    "Design", 
+    "CA1055:Uri return values should not be strings", 
+    Justification = "Causes breaking changes and the potential to require additional work around serialization/deserialization would significantly expand the scope of the effort to apply FxCop rules", 
     Scope = "module"
 )]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage(
