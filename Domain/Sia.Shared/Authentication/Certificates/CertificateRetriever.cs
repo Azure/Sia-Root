@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace Sia.Shared.Authentication
 {
-    public abstract class CertificateRetriever : IHttpClientFactory
+    public abstract class CertificateRetriever : IHttpClientFactory, IDisposable
     {
         protected CertificateRetriever(ILogger logger)
         {
@@ -34,6 +35,20 @@ namespace Sia.Shared.Authentication
                 _logger.LogDebug($"Created client with certificate with thumbprint {_cert.Thumbprint}");
             }
             return _client;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _client.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
