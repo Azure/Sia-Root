@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace Sia.Shared.Validation.Filters
 {
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class Return400BadRequestWhenModelStateInvalid : Attribute, IAsyncActionFilter
     {
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
