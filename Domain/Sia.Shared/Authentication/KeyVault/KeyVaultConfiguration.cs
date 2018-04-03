@@ -17,8 +17,8 @@ namespace Sia.Shared.Authentication
 
         private const string secretUriBase = "https://{0}.vault.azure.net";
 
-        public readonly string Vault;
-        public readonly string ClientId;
-        public readonly string ClientSecret;
+        public string Vault { get; }
+        public string ClientId { get; }
+        public string ClientSecret { get; }
     }
 }
