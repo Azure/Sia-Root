@@ -9,7 +9,7 @@ namespace Sia.Shared.Protocol
     {
         public T Value { get; private set; }
 
-        public Response(HttpStatusCode statusCode, bool isSuccessCode, string content, T value) 
+        internal Response(HttpStatusCode statusCode, bool isSuccessCode, string content, T value) 
             : base(statusCode, isSuccessCode, content)
         {
             this.Value = value;
@@ -22,7 +22,7 @@ namespace Sia.Shared.Protocol
         public bool IsSuccessStatusCode { get; protected set; }
         public string Content { get; protected set; }
 
-        public Response(HttpStatusCode statusCode, bool isSuccessCode, string content)
+        internal Response(HttpStatusCode statusCode, bool isSuccessCode, string content)
         {
             this.StatusCode = statusCode;
             this.IsSuccessStatusCode = isSuccessCode;
