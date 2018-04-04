@@ -17,15 +17,15 @@ namespace Microsoft.EntityFrameworkCore
             where TRight : class, IEntity
         {
             builder.Entity<TAssociation>()
-                .HasOne(assoc => assoc._left)
+                .HasOne(assoc => assoc.left)
                 .WithMany(associationsFromLeft)
-                .HasForeignKey(assoc => assoc._leftId);
+                .HasForeignKey(assoc => assoc.leftId);
             builder.Entity<TAssociation>()
-                .HasOne(assoc => assoc._right)
+                .HasOne(assoc => assoc.right)
                 .WithMany(associationsFromRight)
-                .HasForeignKey(assoc => assoc._rightId);
+                .HasForeignKey(assoc => assoc.rightId);
             builder.Entity<TAssociation>()
-                .HasKey(assoc => new { assoc._leftId, assoc._rightId });
+                .HasKey(assoc => new { assoc.leftId, assoc.rightId });
         }
     }
 }

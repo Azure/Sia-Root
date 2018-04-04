@@ -33,7 +33,7 @@ namespace Sia.Shared.Authentication
             }
             catch(Exception ex)
             {
-                _logger.LogError(
+                logger.LogError(
                    ex,
                    "Exception when attempting to load certificate from vault"
                 );

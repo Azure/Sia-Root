@@ -16,20 +16,20 @@ namespace Sia.Shared.Data
         where TLeft : IEntity
         where TRight : IEntity
     {
-        protected internal abstract long _leftId { get; set; }
-        protected internal abstract long _rightId { get; set; }
-        protected internal abstract TLeft _left { get; set; }
-        protected internal abstract TRight _right { get; set; }
+        protected internal abstract long leftId { get; set; }
+        protected internal abstract long rightId { get; set; }
+        protected internal abstract TLeft left { get; set; }
+        protected internal abstract TRight right { get; set; }
         public void Associate(TLeft left, TRight right)
         {
-            _left = left;
-            _right = right;
-            _leftId = left.Id;
-            _rightId = right.Id;
+            this.left = left;
+            this.right = right;
+            leftId = left.Id;
+            rightId = right.Id;
         }
 
         public KeyValuePair<TLeft, TRight> AssociatesBetween()
-            => new KeyValuePair<TLeft, TRight>(_left, _right);
+            => new KeyValuePair<TLeft, TRight>(left, right);
     }
 
     public abstract class BidrectionalAssociation<TLeft, TRight>
@@ -47,6 +47,6 @@ namespace Sia.Shared.Data
 
 
         KeyValuePair<TRight, TLeft> IAssociation<TRight, TLeft>.AssociatesBetween()
-            => new KeyValuePair<TRight, TLeft>(_right, _left);
+            => new KeyValuePair<TRight, TLeft>(right, left);
     }
 }

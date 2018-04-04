@@ -18,7 +18,7 @@ namespace Sia.Shared.Controllers
         protected readonly AzureActiveDirectoryAuthenticationInfo _authConfig;
         protected readonly IUrlHelper _urlHelper;
 
-        protected AuthenticatedUserContext _authContext => new AuthenticatedUserContext(User, HttpContext.Session, _authConfig);
+        protected AuthenticatedUserContext authContext => new AuthenticatedUserContext(User, HttpContext.Session, _authConfig);
 
         protected BaseController(IMediator mediator, 
             AzureActiveDirectoryAuthenticationInfo authConfig,
