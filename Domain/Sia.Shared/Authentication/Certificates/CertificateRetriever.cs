@@ -10,14 +10,14 @@ namespace Sia.Shared.Authentication
     {
         protected CertificateRetriever(ILogger logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
         private X509Certificate2 _cert;
         private HttpClient _client;
 
 
         protected abstract Task<X509Certificate2> RetrieveCertificateAsync();
-        protected ILogger _logger { get; }
+        protected ILogger logger { get; }
 
         public async Task<HttpClient> GetClientAsync()
         {
@@ -26,13 +26,13 @@ namespace Sia.Shared.Authentication
                 if (_cert is null)
                 {
                     _cert = await RetrieveCertificateAsync();
-                    _logger.LogDebug($"Retrieved Certificate with thumbprint {_cert.Thumbprint}");
+                    logger.LogDebug($"Retrieved Certificate with thumbprint {_cert.Thumbprint}");
                 }
                 var handler = new HttpClientHandler();
                 handler.ClientCertificates.Add(_cert);
                 
                 _client = new HttpClient(handler);
-                _logger.LogDebug($"Created client with certificate with thumbprint {_cert.Thumbprint}");
+                logger.LogDebug($"Created client with certificate with thumbprint {_cert.Thumbprint}");
             }
             return _client;
         }

@@ -33,8 +33,8 @@ namespace Sia.Shared.Protocol
         }
 
         public const string HeaderName = "links";
-        public string HeaderJson => JsonConvert.SerializeObject(GetHeaderValues(), _serializationSettings());
-        protected JsonSerializerSettings _serializationSettings()
+        public string HeaderJson => JsonConvert.SerializeObject(GetHeaderValues(), serializationSettings());
+        protected JsonSerializerSettings serializationSettings()
             => new JsonSerializerSettings()
             {
                 NullValueHandling = NullValueHandling.Ignore
@@ -61,8 +61,8 @@ namespace Sia.Shared.Protocol
                     ? null
                     : new PaginationLinks()
                     {
-                        Previous = _previousPageLink,
-                        Next = _nextPageLink
+                        Previous = previousPageLink,
+                        Next = nextPageLink
                     },
                 Related = _relationLinks
             };
@@ -70,14 +70,14 @@ namespace Sia.Shared.Protocol
         }
 
 
-        protected string _nextPageLink => _metadata.NextPageExists
-            ? _urlHelper.Link(_routeName, new { }) + FormatUrl(_nextPageLinkValues())
+        protected string nextPageLink => _metadata.NextPageExists
+            ? _urlHelper.Link(_routeName, new { }) + FormatUrl(nextPageLinkValues())
             : null;
-        protected string _previousPageLink => _metadata.PreviousPageExists
-            ? _urlHelper.Link(_routeName, new { }) + FormatUrl(_previousPageLinkValues())
+        protected string previousPageLink => _metadata.PreviousPageExists
+            ? _urlHelper.Link(_routeName, new { }) + FormatUrl(previousPageLinkValues())
             : null;
 
-        protected virtual IEnumerable<KeyValuePair<string, string>> _nextPageLinkValues()
+        protected virtual IEnumerable<KeyValuePair<string, string>> nextPageLinkValues()
         {
             var nextPageLinksValue = _metadata.NextPageLinkInfo;
             if (_filterMetadata != null)
@@ -87,7 +87,7 @@ namespace Sia.Shared.Protocol
             return nextPageLinksValue;
         }
 
-        protected virtual IEnumerable<KeyValuePair<string, string>> _previousPageLinkValues()
+        protected virtual IEnumerable<KeyValuePair<string, string>> previousPageLinkValues()
         {
             var previousPageLinksValue = _metadata.PreviousPageLinkInfo;
             if (_filterMetadata != null)
