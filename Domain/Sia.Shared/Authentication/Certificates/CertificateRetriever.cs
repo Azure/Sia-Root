@@ -42,6 +42,7 @@ namespace Sia.Shared.Authentication
             if (disposing)
             {
                 _client.Dispose();
+                _cert.Dispose();
             }
         }
 
