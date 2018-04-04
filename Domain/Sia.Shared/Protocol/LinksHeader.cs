@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Sia.Shared.Data;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Sia.Shared.Protocol
@@ -47,10 +48,10 @@ namespace Sia.Shared.Protocol
                 {
                     Pagination = new PaginationMetadataRecord()
                     {
-                        PageNumber = _metadata.PageNumber.ToString(),
-                        PageSize = _metadata.PageSize.ToString(),
-                        TotalRecords = _metadata.TotalRecords.ToString(),
-                        TotalPages = _metadata.TotalPages.ToString()
+                        PageNumber = _metadata.PageNumber.ToString(CultureInfo.InvariantCulture),
+                        PageSize = _metadata.PageSize.ToString(CultureInfo.InvariantCulture),
+                        TotalRecords = _metadata.TotalRecords.ToString(CultureInfo.InvariantCulture),
+                        TotalPages = _metadata.TotalPages.ToString(CultureInfo.InvariantCulture)
                     }
                 };
             toReturn.Links = new LinksCollection()

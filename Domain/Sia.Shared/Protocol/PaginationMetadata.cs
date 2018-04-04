@@ -1,5 +1,6 @@
 ﻿using Sia.Shared.Protocol;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Sia.Shared.Protocol
 {
@@ -13,15 +14,15 @@ namespace Sia.Shared.Protocol
 
         public IDictionary<string, string> PreviousPageLinkInfo => new Dictionary<string, string>
         {
-            { nameof(PageNumber), (PageNumber - 1).ToString() },
-            { nameof(PageSize), PageSize.ToString() }
+            { nameof(PageNumber), (PageNumber - 1).ToString(CultureInfo.InvariantCulture) },
+            { nameof(PageSize), PageSize.ToString(CultureInfo.InvariantCulture) }
         };
 
 
         public IDictionary<string, string> NextPageLinkInfo => new Dictionary<string, string>
         {
-            { nameof(PageNumber), (PageNumber + 1).ToString() },
-            { nameof(PageSize), PageSize.ToString() }
+            { nameof(PageNumber), (PageNumber + 1).ToString(CultureInfo.InvariantCulture) },
+            { nameof(PageSize), PageSize.ToString(CultureInfo.InvariantCulture) }
         };
 
         public bool PreviousPageExists => PageNumber > 1;

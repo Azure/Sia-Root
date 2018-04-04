@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Sia.Shared.Authentication
 {
@@ -34,7 +35,7 @@ namespace Sia.Shared.Authentication
         /// <summary>
         /// Authentication scheme to use. Must match scheme expected by remote resource.
         /// </summary>
-        public string Authority => String.Format(AadInstance, Tenant);
+        public string Authority => string.Format(CultureInfo.InvariantCulture, AadInstance, Tenant);
         /// <summary>
         /// Authentication scheme to use. Must match scheme expected by remote resource.
         /// </summary>
