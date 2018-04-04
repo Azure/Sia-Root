@@ -2,6 +2,7 @@
 using Sia.Shared.Validation;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace Sia.Shared.Authentication
@@ -12,7 +13,11 @@ namespace Sia.Shared.Authentication
         {
             ClientId = ThrowIf.NullOrWhiteSpace(clientId, nameof(clientId));
             ClientSecret = ThrowIf.NullOrWhiteSpace(clientSecret, nameof(clientSecret));
-            Vault = String.Format(secretUriBase, ThrowIf.NullOrWhiteSpace(vault, nameof(vault)));
+            Vault = string.Format(
+                CultureInfo.InvariantCulture, 
+                secretUriBase, 
+                ThrowIf.NullOrWhiteSpace(vault, nameof(vault))
+            );
         }
 
         private const string secretUriBase = "https://{0}.vault.azure.net";

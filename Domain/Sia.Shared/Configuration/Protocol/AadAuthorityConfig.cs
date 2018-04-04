@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace Sia.Shared.Configuration.Protocol
@@ -25,9 +26,9 @@ namespace Sia.Shared.Configuration.Protocol
         public string Tenant { get; set; }
         public string Authority => String.IsNullOrWhiteSpace(AadInstance) || String.IsNullOrWhiteSpace(Tenant)
             ? null
-            : String.Format(AadInstance, Tenant);
+            : string.Format(CultureInfo.InvariantCulture, AadInstance, Tenant);
         public string V2Authority => String.IsNullOrWhiteSpace(V2AadInstance) || String.IsNullOrWhiteSpace(Tenant)
             ? null
-            : String.Format(V2AadInstance, Tenant);
+            : string.Format(CultureInfo.InvariantCulture, V2AadInstance, Tenant);
     }
 }
