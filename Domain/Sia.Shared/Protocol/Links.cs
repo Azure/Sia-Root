@@ -32,7 +32,9 @@ namespace Sia.Shared.Protocol
 
     public class OperationLinks
     {
+#pragma warning disable CA1720 // Identifier contains type name
         public SingleOperationLinks Single { get; set; }
+#pragma warning restore CA1720 // Identifier contains type name
         public MultipleOperationLinks Multiple { get; set; }
     }
 
