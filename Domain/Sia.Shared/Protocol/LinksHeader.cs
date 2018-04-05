@@ -98,10 +98,10 @@ namespace Sia.Shared.Protocol
             return previousPageLinksValue;
         }
 
-        protected string UrlTokenFormat(KeyValuePair<string, string> token)
+        protected static string UrlTokenFormat(KeyValuePair<string, string> token)
             => $"{token.Key}={token.Value}";
 
-        protected string FormatUrl(IEnumerable<KeyValuePair<string, string>> tokens)
+        protected static string FormatUrl(IEnumerable<KeyValuePair<string, string>> tokens)
             => "/?" + string.Join("&", tokens.Select(UrlTokenFormat));
     }
 }
