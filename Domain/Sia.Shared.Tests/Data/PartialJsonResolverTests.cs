@@ -111,15 +111,50 @@ namespace Sia.Shared.Tests.Data
         private static JToken ExtractPropertyFromResult(object result, string propName) => ((JObject)result).Property(propName).Value;
     }
 
-    internal class JsonSerializationTestObject :IEquatable<JsonSerializationTestObject>
+    internal class JsonSerializationTestObject : IEquatable<JsonSerializationTestObject>
     {
-        public static string ExpectedSerialization()
-            => "{\"a\":\"ValueOfA\",\"b\":1}";
-        public bool Equals(JsonSerializationTestObject other)
-            => a == other.a && b == other.b;
-
         public string a { get; set; } = "ValueOfA";
         public int b { get; set; } = 1;
+
+        public static string ExpectedSerialization()
+            => "{\"a\":\"ValueOfA\",\"b\":1}";
+
+        public static bool operator ==(JsonSerializationTestObject left, JsonSerializationTestObject right)
+        {
+            if ((object)left == null || (object)right == null)
+            {
+                return Object.Equals(left, right);
+            }
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(JsonSerializationTestObject left, JsonSerializationTestObject right)
+        {
+            if ((object)left == null || (object)right == null)
+            {
+                return !Object.Equals(left, right);
+            }
+
+            return !left.Equals(right);
+        }
+
+        public bool Equals(JsonSerializationTestObject other)
+            => other != null && a == other.a && b == other.b;
+
+        public override bool Equals(Object other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            var castOther = other as JsonSerializationTestObject;
+
+            return castOther != null &&
+                a == castOther.a &&
+                b == castOther.b;
+        }
     }
 
     internal class TestHasJsonDataString : IJsonDataString
