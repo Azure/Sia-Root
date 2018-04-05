@@ -26,8 +26,10 @@ namespace Sia.Shared.Extensions.Mediatr
 
         public virtual async Task<TResult> Handle(TRequest request, CancellationToken cancellationToken)
         {
-            var httpResponse = await SendRequest(request, cancellationToken);
-            var logicalResponse = await ResponseFactory.CreateResponse <TResult>(httpResponse);
+            var httpResponse = await SendRequest(request, cancellationToken)
+                .ConfigureAwait(continueOnCapturedContext: false);
+            var logicalResponse = await ResponseFactory.CreateResponse <TResult>(httpResponse)
+                .ConfigureAwait(continueOnCapturedContext: false);
             logicalResponse.ThrowExceptionOnUnsuccessfulStatus();
             return logicalResponse.Value;
         }
@@ -43,8 +45,10 @@ namespace Sia.Shared.Extensions.Mediatr
 
         public virtual async Task Handle(TRequest request, CancellationToken cancellationToken)
         {
-            var httpResponse = await SendRequest(request, cancellationToken);
-            var logicalResponse = await ResponseFactory.CreateResponse(httpResponse);
+            var httpResponse = await SendRequest(request, cancellationToken)
+                .ConfigureAwait(continueOnCapturedContext: false);
+            var logicalResponse = await ResponseFactory.CreateResponse(httpResponse)
+                .ConfigureAwait(continueOnCapturedContext: false);
             logicalResponse.ThrowExceptionOnUnsuccessfulStatus();
         }
     }
@@ -63,8 +67,11 @@ namespace Sia.Shared.Extensions.Mediatr
             {
                 var message = new HttpRequestMessage(Method(), RelativeUri(request));
                 AddContentToMessage(request, message);
-                await AddAuthorizationToMessage(request, message);
-                var result = await _client.SendAsync(message, cancellationToken);
+                await AddAuthorizationToMessage(request, message)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+                var result = await _client
+                    .SendAsync(message, cancellationToken)
+                    .ConfigureAwait(continueOnCapturedContext: false);
                 return result;
             }
             catch (HttpRequestException ex)
@@ -82,7 +89,10 @@ namespace Sia.Shared.Extensions.Mediatr
         }
         protected virtual async Task AddAuthorizationToMessage(TRequest request, HttpRequestMessage message)
         {
-            var tokenResult = await request.UserContext.AcquireTokenAsync();
+            var tokenResult = await request
+                .UserContext
+                .AcquireTokenAsync()
+                .ConfigureAwait(continueOnCapturedContext: false);
             message.Headers.Authorization = new AuthenticationHeaderValue(request.UserContext.AuthConfig.Scheme, tokenResult);
         }
 

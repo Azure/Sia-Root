@@ -29,7 +29,9 @@ namespace Sia.Shared.Authentication
         {
             try
             {
-                return await _vault.GetCertificateAsync(_certName);
+                return await _vault
+                    .GetCertificateAsync(_certName)
+                    .ConfigureAwait(continueOnCapturedContext: false);
             }
             catch(Exception ex)
             {

@@ -15,7 +15,7 @@ namespace Sia.Shared.Validation.Filters
             }
             else
             {
-                await next();
+                await next().ConfigureAwait(continueOnCapturedContext: false);
             }
         }
     }
