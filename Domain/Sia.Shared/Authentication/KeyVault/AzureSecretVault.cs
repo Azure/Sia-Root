@@ -30,7 +30,7 @@ namespace Sia.Shared.Authentication
                     .ConfigureAwait(continueOnCapturedContext: false);
                 return secret.Value;
             }
-            catch (KeyVaultErrorException ex)
+            catch (KeyVaultErrorException)
             {
                 return string.Empty;
             }
@@ -51,7 +51,7 @@ namespace Sia.Shared.Authentication
 
                 return new X509Certificate2(Convert.FromBase64String(secretBundle.Value));
             }
-            catch (KeyVaultErrorException ex)
+            catch (KeyVaultErrorException)
             {
                 return null;
             }

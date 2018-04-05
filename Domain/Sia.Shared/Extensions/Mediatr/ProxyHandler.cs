@@ -74,7 +74,7 @@ namespace Sia.Shared.Extensions.Mediatr
                     .ConfigureAwait(continueOnCapturedContext: false);
                 return result;
             }
-            catch (HttpRequestException ex)
+            catch (HttpRequestException)
             {
                 return new HttpResponseMessage(HttpStatusCode.NotFound);
             }
