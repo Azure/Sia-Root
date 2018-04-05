@@ -25,9 +25,11 @@ namespace Sia.Shared.Extensions.Mediatr
         {
             if (ShouldRequestContinue(_config))
             {
-                return await next();
+                return await next()
+                .ConfigureAwait(continueOnCapturedContext: false); ;
             }
-            return await GenerateMockAsync(request, cancellationToken);
+            return await GenerateMockAsync(request, cancellationToken)
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
 
         public abstract bool ShouldRequestContinue(TConfig config);

@@ -9,37 +9,46 @@ namespace System.Net.Http
     {
         public static async Task<HttpResponseMessage> GetAsync(this HttpClient client, string requestUri, AuthenticatedUserContext authenticationInfo)
         {
-            return await client.SendAsync(requestUri, authenticationInfo, HttpMethod.Get);
+            return await client
+                .SendAsync(requestUri, authenticationInfo, HttpMethod.Get)
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
 
         public static async Task<HttpResponseMessage> PostAsync(this HttpClient client, string requestUri, HttpContent postContent, AuthenticatedUserContext authenticationInfo)
         {
-            return await client.SendAsync(requestUri, postContent, authenticationInfo, HttpMethod.Post);
+            return await client
+                .SendAsync(requestUri, postContent, authenticationInfo, HttpMethod.Post)
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
 
         public static async Task<HttpResponseMessage> PutAsync(this HttpClient client, string requestUri, HttpContent postContent, AuthenticatedUserContext authenticationInfo)
         {
-            return await client.SendAsync(requestUri, postContent, authenticationInfo, HttpMethod.Put);
+            return await client
+                .SendAsync(requestUri, postContent, authenticationInfo, HttpMethod.Put)
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
 
         private static async Task<HttpResponseMessage> SendAsync(this HttpClient client, string requestUri, AuthenticatedUserContext authenticationInfo, HttpMethod method)
         {
-            HttpRequestMessage request = await GenerateRequest(requestUri, authenticationInfo, method);
+            HttpRequestMessage request = await GenerateRequest(requestUri, authenticationInfo, method)
+                .ConfigureAwait(continueOnCapturedContext: false);
 
-            return await client.SendAsync(request);
+            return await client.SendAsync(request).ConfigureAwait(continueOnCapturedContext: false);
         }
 
         private static async Task<HttpResponseMessage> SendAsync(this HttpClient client, string requestUri, HttpContent postContent, AuthenticatedUserContext authenticationInfo, HttpMethod method)
         {
-            HttpRequestMessage request = await GenerateRequest(requestUri, authenticationInfo, method);
+            HttpRequestMessage request = await GenerateRequest(requestUri, authenticationInfo, method)
+                .ConfigureAwait(continueOnCapturedContext: false);
             request.Content = postContent;
 
-            return await client.SendAsync(request);
+            return await client.SendAsync(request).ConfigureAwait(continueOnCapturedContext: false);
         }
 
         private static async Task<HttpRequestMessage> GenerateRequest(string requestUri, AuthenticatedUserContext authenticationInfo, HttpMethod method)
         {
-            var tokenResult = await authenticationInfo.AcquireTokenAsync();
+            var tokenResult = await authenticationInfo.AcquireTokenAsync()
+                .ConfigureAwait(continueOnCapturedContext: false);
 
             var request = new HttpRequestMessage(method, requestUri);
             request.Headers.Authorization = new AuthenticationHeaderValue(authenticationInfo.AuthConfig.Scheme, tokenResult);

@@ -25,7 +25,8 @@ namespace Sia.Shared.Authentication
             {
                 if (_cert is null)
                 {
-                    _cert = await RetrieveCertificateAsync();
+                    _cert = await RetrieveCertificateAsync()
+                        .ConfigureAwait(continueOnCapturedContext: false);
                     logger.LogDebug($"Retrieved Certificate with thumbprint {_cert.Thumbprint}");
                 }
                 var handler = new HttpClientHandler();

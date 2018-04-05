@@ -36,7 +36,10 @@ namespace Sia.Shared.Protocol
             => new Response(
                 message.StatusCode,
                 message.IsSuccessStatusCode,
-                await message.Content.ReadAsStringAsync()
+                await message
+                    .Content
+                    .ReadAsStringAsync()
+                    .ConfigureAwait(continueOnCapturedContext: false)
             );
 
 
@@ -47,7 +50,10 @@ namespace Sia.Shared.Protocol
 
             if (message.IsSuccessStatusCode)
             {
-                content = await message.Content.ReadAsStringAsync();
+                content = await message
+                    .Content
+                    .ReadAsStringAsync()
+                    .ConfigureAwait(continueOnCapturedContext: false);
                 value = JsonConvert.DeserializeObject<T>(content);
             }
 

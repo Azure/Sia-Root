@@ -18,11 +18,13 @@ namespace Sia.Shared.Middleware
         {
             try
             {
-                await _next(context);
+                await _next(context)
+                    .ConfigureAwait(continueOnCapturedContext: false);
             }
             catch (BaseException ex)
             {
-                await HandleExceptionAsync(context, ex);
+                await HandleExceptionAsync(context, ex)
+                    .ConfigureAwait(continueOnCapturedContext: false);
             }
         }
 
@@ -31,7 +33,10 @@ namespace Sia.Shared.Middleware
             var result = JsonConvert.SerializeObject(new { error = ex.Message });
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = ex.StatusCode;
-            await context.Response.WriteAsync(result);
+            await context
+                .Response
+                .WriteAsync(result)
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
     }
 }

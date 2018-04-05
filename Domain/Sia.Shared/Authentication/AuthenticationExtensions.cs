@@ -17,12 +17,19 @@ namespace Sia.Shared.Authentication
             var credential = new ClientCredential(authenticationInfo.AuthConfig.ClientId, authenticationInfo.AuthConfig.ClientSecret);
             try
             {
-                var result = await authContext.AcquireTokenSilentAsync(authenticationInfo.AuthConfig.Resource, credential, new UserIdentifier(userObjectID, UserIdentifierType.UniqueId));
+                var result = await authContext
+                    .AcquireTokenSilentAsync(
+                        authenticationInfo.AuthConfig.Resource, 
+                        credential, 
+                        new UserIdentifier(userObjectID, UserIdentifierType.UniqueId)
+                    ).ConfigureAwait(continueOnCapturedContext: false);
                 return result.AccessToken;
             }
             catch (AdalSilentTokenAcquisitionException)
             {
-                var result = await authContext.AcquireTokenAsync(authenticationInfo.AuthConfig.Resource, credential);
+                var result = await authContext
+                    .AcquireTokenAsync(authenticationInfo.AuthConfig.Resource, credential)
+                    .ConfigureAwait(continueOnCapturedContext: false);
                 return result.AccessToken;
             }
         }

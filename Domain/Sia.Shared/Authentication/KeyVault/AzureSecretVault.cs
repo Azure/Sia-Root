@@ -25,7 +25,9 @@ namespace Sia.Shared.Authentication
         {
             try
             {
-                var secret = await GetKeyVaultClient().GetSecretAsync(_config.Vault + _secretsEndpoint + secretName).ConfigureAwait(false);
+                var secret = await GetKeyVaultClient()
+                    .GetSecretAsync(_config.Vault + _secretsEndpoint + secretName)
+                    .ConfigureAwait(continueOnCapturedContext: false);
                 return secret.Value;
             }
             catch (KeyVaultErrorException ex)
@@ -41,9 +43,11 @@ namespace Sia.Shared.Authentication
                 var client = GetKeyVaultClient();
                 var cert = await client
                     .GetCertificateAsync(_config.Vault, certificateName)
-                    .ConfigureAwait(false);
+                    .ConfigureAwait(continueOnCapturedContext: false);
 
-                var secretBundle = await client.GetSecretAsync(cert.Sid);
+                var secretBundle = await client
+                    .GetSecretAsync(cert.Sid)
+                    .ConfigureAwait(continueOnCapturedContext: false);
 
                 return new X509Certificate2(Convert.FromBase64String(secretBundle.Value));
             }
@@ -57,7 +61,9 @@ namespace Sia.Shared.Authentication
         {
             var authContext = new AuthenticationContext(authority);
             ClientCredential clientCred = new ClientCredential(_config.ClientId, _config.ClientSecret);
-            AuthenticationResult result = await authContext.AcquireTokenAsync(resource, clientCred);
+            AuthenticationResult result = await authContext
+                .AcquireTokenAsync(resource, clientCred)
+                .ConfigureAwait(continueOnCapturedContext: false);
 
             if (result == null)
                 throw new InvalidOperationException("Failed to obtain the JWT token");
