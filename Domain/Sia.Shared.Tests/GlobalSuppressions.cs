@@ -11,3 +11,9 @@
     Scope = "module"
 )]
 
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage(
+    "Naming",
+    "CA1716: Identifiers should not match keywords",
+    Justification = "This rule is triggering on the namespace 'Shared'. This namespacing isn't particularly confusing to consumers of this library. Also, 'Shared' is a keyword in VB, not C#.",
+    Scope = "module"
+)]
