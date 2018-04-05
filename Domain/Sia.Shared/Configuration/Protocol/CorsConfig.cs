@@ -9,6 +9,6 @@ namespace Sia.Shared.Configuration.Protocol
         /// <summary>
         /// List of origins to allow requests from.
         /// </summary>
-        public List<string> AcceptableOrigins { get; set; }
+        public List<string> AcceptableOrigins { get; } = new List<string>();
     }
 }
