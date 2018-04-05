@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using Sia.Shared.Data;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -24,8 +25,8 @@ namespace Sia.Shared.Tests.Data
 
             var result = objectUnderTest.Resolve(input, null, null, null);
 
+            Assert.AreEqual(expectedResultDataValue, result, false, CultureInfo.InvariantCulture);
 
-            Assert.AreEqual(expectedResultDataValue, result, false);
         }
 
         [TestMethod]
