@@ -47,6 +47,6 @@ namespace Sia.Shared.Protocol
             return !(type.GetGenericArguments()[0].GetInterface(nameof(IJsonDataObject)) is null);
         }
 
-        private object Deserialize(string serializedData) => JsonConvert.DeserializeObject(serializedData);
+        private static object Deserialize(string serializedData) => JsonConvert.DeserializeObject(serializedData);
     }
 }

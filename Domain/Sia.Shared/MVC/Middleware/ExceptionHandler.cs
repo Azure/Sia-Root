@@ -26,7 +26,7 @@ namespace Sia.Shared.Middleware
             }
         }
 
-        private async Task HandleExceptionAsync(HttpContext context, BaseException ex)
+        private static async Task HandleExceptionAsync(HttpContext context, BaseException ex)
         {
             var result = JsonConvert.SerializeObject(new { error = ex.Message });
             context.Response.ContentType = "application/json";
