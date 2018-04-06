@@ -1,4 +1,4 @@
-﻿using Sia.Shared.Extensions.Mediatr;
+﻿using Sia.Core.Extensions.Mediatr;
 using System;
 using System.Collections.Generic;
 using System.Text;

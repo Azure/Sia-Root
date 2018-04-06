@@ -1,4 +1,4 @@
-﻿using Sia.Shared.Data;
+﻿using Sia.Core.Data;
 
 namespace Sia.Domain
 {

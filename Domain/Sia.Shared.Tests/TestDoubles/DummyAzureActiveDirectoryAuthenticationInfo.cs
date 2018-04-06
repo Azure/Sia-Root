@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Sia.Shared.Authentication;
+using Sia.Core.Authentication;
 
-namespace Sia.Shared.Tests.TestDoubles
+namespace Sia.Core.Tests.TestDoubles
 {
     public class DummyAzureActiveDirectoryAuthenticationInfo : AzureActiveDirectoryAuthenticationInfo
     {

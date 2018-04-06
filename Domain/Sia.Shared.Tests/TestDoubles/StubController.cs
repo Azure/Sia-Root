@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;  
-using Sia.Shared.Authentication;
-using Sia.Shared.Controllers;
+using Sia.Core.Authentication;
+using Sia.Core.Controllers;
 
-namespace Sia.Shared.Tests.TestDoubles
+namespace Sia.Core.Tests.TestDoubles
 {
 
     public class StubController : BaseController
