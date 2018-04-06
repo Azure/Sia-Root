@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Sia.Domain.Playbook
 {
-    public class DisplayTemplate : Template
+    public class DisplayTemplate : TemplateBase
     {
     }
 }

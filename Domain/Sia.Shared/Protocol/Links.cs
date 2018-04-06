@@ -6,11 +6,11 @@ namespace Sia.Shared.Protocol
 {
     public class LinksForSerialization
     {
-        public Metadata Metadata { get; set; }
+        public LinksMetadata Metadata { get; set; }
         public LinksCollection Links { get; set; }
     }
 
-    public class Metadata
+    public class LinksMetadata
     {
         public PaginationMetadataRecord Pagination { get; set; }
     }

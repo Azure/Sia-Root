@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Sia.Domain.Playbook
 {
-    public abstract class Template : IEntity
+    public abstract class TemplateBase : IEntity
     {
         public long Id { get; set; }
         public string Name { get; set; }
