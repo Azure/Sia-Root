@@ -12,13 +12,16 @@ namespace Sia.Shared.Authentication
             ClientSecret = clientSecret;
             Tenant = tenant;
         }
+
+#pragma warning disable CA1822 // Mark members as static (this member may become configurable, see summary, so it should remain a property of an instance)
         /// <summary>
-        ///   For the public AAD endpoint, this will be https://login.microsoftonline.com/{0}, but it may be different in China and potentially other sovereign clouds
+        /// For the public AAD endpoint, this will be https://login.microsoftonline.com/{0}, but it may be different in China and potentially other sovereign clouds
         /// </summary>
         public string AadInstance => "https://login.microsoftonline.com/{0}";
-       /// <summary>
-       /// The client ID or resource URI of the application you're authenticating TO
-       /// </summary>
+#pragma warning restore CA1822 // Mark members as static
+        /// <summary>
+        /// The client ID or resource URI of the application you're authenticating TO
+        /// </summary>
         public string Resource { get; }
         /// <summary>
         /// The application ID of the application you're authenticating FROM
@@ -36,9 +39,12 @@ namespace Sia.Shared.Authentication
         /// Authentication scheme to use. Must match scheme expected by remote resource.
         /// </summary>
         public string Authority => string.Format(CultureInfo.InvariantCulture, AadInstance, Tenant);
+
+#pragma warning disable CA1822 // Mark members as static (the authentication scheme is a property of an instance and may become configurable)
         /// <summary>
         /// Authentication scheme to use. Must match scheme expected by remote resource.
         /// </summary>
         public string Scheme => "Bearer";
+#pragma warning restore CA1822 // Mark members as static
     }
 }

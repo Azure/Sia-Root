@@ -11,7 +11,7 @@ namespace Sia.Shared.Authentication
          : CertificateRetriever
     {
         private readonly string _certThumbprint;
-        private List<StoreLocation> _storeLocations
+        private static List<StoreLocation> _storeLocations
             => new List<StoreLocation>
             {
                 StoreLocation.CurrentUser,
