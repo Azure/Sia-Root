@@ -18,7 +18,7 @@ namespace Sia.Shared.Tests.Controllers
     public class BaseControllerTests
     {
         [TestMethod]
-        public async Task Return_OkResultObject_OkIfFound_Input_Is_Not_Null()
+        public void Return_OkResultObject_OkIfFound_Input_Is_Not_Null()
         {
             var mockResponse = new HttpResponseMessage(HttpStatusCode.OK);
             var mockMediator = new Mock<IMediator>();
@@ -34,7 +34,7 @@ namespace Sia.Shared.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task ReturnNotFoundResultObject_OkIfFound_Input_Is_Null()
+        public void ReturnNotFoundResultObject_OkIfFound_Input_Is_Null()
         {
             var mockMediator = new Mock<IMediator>();
             var mockConfig = new Mock<DummyAzureActiveDirectoryAuthenticationInfo>();
