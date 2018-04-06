@@ -13,8 +13,6 @@ namespace Sia.Shared.Authentication
     {
         private readonly KeyVaultConfiguration _config;
         private const string _secretsEndpoint = "/secrets/";
-        private const string _keysEndpoint = "/keys/";
-        private const string _certificatesEndpoint = "/certificates/";
 
         public AzureSecretVault(KeyVaultConfiguration configuration)
         {
