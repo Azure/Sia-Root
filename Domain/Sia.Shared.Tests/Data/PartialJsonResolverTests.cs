@@ -112,7 +112,10 @@ namespace Sia.Shared.Tests.Data
         private static JToken ExtractPropertyFromResult(object result, string propName) => ((JObject)result).Property(propName).Value;
     }
 
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+#pragma warning disable CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
     internal class JsonSerializationTestObject : IEquatable<JsonSerializationTestObject>
+
     {
         public string a { get; set; } = "ValueOfA";
         public int b { get; set; } = 1;
@@ -157,6 +160,8 @@ namespace Sia.Shared.Tests.Data
                 b == castOther.b;
         }
     }
+#pragma warning restore CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
 
     internal class TestHasJsonDataString : IJsonDataString
     {
