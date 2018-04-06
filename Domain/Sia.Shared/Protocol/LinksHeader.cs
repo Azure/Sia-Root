@@ -44,7 +44,7 @@ namespace Sia.Shared.Protocol
             var toReturn = new LinksForSerialization();
             toReturn.Metadata = _metadata is null
                 ? null
-                : new Metadata()
+                : new LinksMetadata()
                 {
                     Pagination = new PaginationMetadataRecord()
                     {

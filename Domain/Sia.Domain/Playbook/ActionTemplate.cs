@@ -2,7 +2,7 @@
 
 namespace Sia.Domain.Playbook
 {
-    public class ActionTemplate : Template
+    public class ActionTemplate : TemplateBase
     {
         public bool IsUrl { get; set; }
     }
