@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Sia.Shared.Tests.TestDoubles;
+using Sia.Core.Tests.TestDoubles;
 
-namespace Sia.Shared.Tests.Controllers
+namespace Sia.Core.Tests.Controllers
 {
 
     [TestClass]

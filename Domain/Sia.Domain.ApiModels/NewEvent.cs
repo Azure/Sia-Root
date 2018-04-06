@@ -1,4 +1,4 @@
-﻿using Sia.Shared.Data;
+﻿using Sia.Core.Data;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Dynamic;

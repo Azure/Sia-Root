@@ -1,10 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Sia.Shared.Validation;
+using Sia.Core.Validation;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Sia.Shared.Tests.Validation
+namespace Sia.Core.Tests.Validation
 {
     [TestClass]
     public class ThrowIfTests

@@ -1,13 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
-using Sia.Shared.Data;
+using Sia.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace Sia.Shared.Tests.Data
+namespace Sia.Core.Tests.Data
 {
     [TestClass]
     public class PartialJsonResolverTests

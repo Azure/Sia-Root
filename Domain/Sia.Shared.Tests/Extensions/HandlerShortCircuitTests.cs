@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Sia.Gateway.Tests.TestDoubles;
 
-namespace Sia.Shared.Tests.Extensions
+namespace Sia.Core.Tests.Extensions
 {
     [TestClass]
     public class HandlerShortCircuitTests
