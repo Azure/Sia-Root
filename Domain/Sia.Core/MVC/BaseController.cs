@@ -32,7 +32,7 @@ namespace Sia.Core.Controllers
         public IActionResult OkIfFound<TResponse>(TResponse response)
         where TResponse : class
         {
-            if (response == null || response.ToString() == "null")
+            if (response == null)
             {
                 return NotFound();
             }

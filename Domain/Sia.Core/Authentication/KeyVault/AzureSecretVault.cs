@@ -30,6 +30,7 @@ namespace Sia.Core.Authentication
             }
             catch (KeyVaultErrorException)
             {
+                // TODO: Log exception
                 return string.Empty;
             }
         }
@@ -51,6 +52,7 @@ namespace Sia.Core.Authentication
             }
             catch (KeyVaultErrorException)
             {
+                // TODO: Log exception
                 return null;
             }
         }
