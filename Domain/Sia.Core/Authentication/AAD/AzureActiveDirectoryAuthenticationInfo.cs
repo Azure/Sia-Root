@@ -12,13 +12,11 @@ namespace Sia.Core.Authentication
             ClientSecret = clientSecret;
             Tenant = tenant;
         }
-
-#pragma warning disable CA1822 // Mark members as static (this member may become configurable, see summary, so it should remain a property of an instance)
+        
         /// <summary>
         /// For the public AAD endpoint, this will be https://login.microsoftonline.com/{0}, but it may be different in China and potentially other sovereign clouds
         /// </summary>
-        public string AadInstance => "https://login.microsoftonline.com/{0}";
-#pragma warning restore CA1822 // Mark members as static
+        public string AadInstance { get; } = "https://login.microsoftonline.com/{0}";
         /// <summary>
         /// The client ID or resource URI of the application you're authenticating TO
         /// </summary>

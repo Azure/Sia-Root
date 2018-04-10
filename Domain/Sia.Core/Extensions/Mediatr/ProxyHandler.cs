@@ -76,6 +76,7 @@ namespace Sia.Core.Extensions.Mediatr
             }
             catch (HttpRequestException)
             {
+                // TODO: Log exception
                 return new HttpResponseMessage(HttpStatusCode.NotFound);
             }
         }
