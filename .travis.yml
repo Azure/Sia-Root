@@ -2,6 +2,5 @@ language: csharp
 mono: none
 dotnet: 2.1.4
 script:
- - dotnet restore
- - dotnet build ./Domain/Sia.Shared.Tests/Sia.Shared.Tests.csproj
- - dotnet test ./Domain/Sia.Shared.Tests/Sia.Shared.Tests.csproj
+ - dotnet restore ./Domain/Sia.Domain.sln
+ - dotnet build ./Domain/Sia.Domain.sln
