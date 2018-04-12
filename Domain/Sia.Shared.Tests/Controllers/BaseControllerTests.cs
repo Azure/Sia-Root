@@ -42,7 +42,7 @@ namespace Sia.Core.Tests.Controllers
             var controller = new StubController(mockMediator.Object, mockConfig.Object, mockUrlHelper.Object);
             var expectedResult = new NotFoundResult();
 
-            var result = controller.OkIfFound("null");
+            var result = controller.OkIfFound((object)null);
             
             Assert.IsNotNull(result);
             Assert.AreEqual(result.GetType(), expectedResult.GetType());
