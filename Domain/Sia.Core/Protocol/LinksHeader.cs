@@ -1,102 +1,92 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Sia.Core.Data;
+using Sia.Core.Validation;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
 namespace Sia.Core.Protocol
 {
-    public class LinksHeader
+    public interface ILinksHeader
     {
-        private IFilterMetadataProvider _filterMetadata;
-        private PaginationMetadata _metadata;
-        private IUrlHelper _urlHelper;
-        private string _routeName;
-        private readonly OperationLinks _operationLinks;
-        private readonly RelationLinks _relationLinks;
+        LinksForSerialization GetHeaderValues();
+    }
+    
+    public class CrudLinksHeader : ILinksHeader
+    {
+        private OperationLinks OperationLinks { get; }
+        private RelationLinks RelationLinks { get; }
 
-        public LinksHeader(
-            IFilterMetadataProvider filterMetadata,
-            PaginationMetadata metadata,
-            IUrlHelper urlHelper,
-            string routeName, 
-            OperationLinks operationLinks,
-            RelationLinks relationLinks)
+        public CrudLinksHeader(OperationLinks operationLinks, RelationLinks relationLinks)
         {
-            _filterMetadata = filterMetadata;
-            _metadata = metadata;
-            _urlHelper = urlHelper;
-            _routeName = routeName;
-            _operationLinks = operationLinks;
+            OperationLinks = ThrowIf.Null(operationLinks, nameof(operationLinks));
+            RelationLinks = relationLinks;
+        }
+
+        public LinksForSerialization GetHeaderValues() => 
+            new LinksForSerialization()
+            {
+                Links = new LinksCollection()
+                {
+                    Operations = OperationLinks,
+                    Related = RelationLinks
+                }
+            };
+    }
+
+    public class PaginatedLinksHeader : ILinksHeader
+    {
+        private IFilterMetadataProvider _filterMetadata { get; }
+        private PaginationMetadata _pagination { get; }
+        private string _baseRoute { get; }
+        private OperationLinks _operationLinks { get; }
+        private RelationLinks _relationLinks { get; }
+
+        public PaginatedLinksHeader(
+            string baseRoute,
+            OperationLinks operationLinks,
+            RelationLinks relationLinks,
+            PaginationMetadata pagination,
+            IFilterMetadataProvider filterMetadata = null
+        )
+        {
+            _operationLinks = ThrowIf.Null(operationLinks, nameof(operationLinks));
             _relationLinks = relationLinks;
+            _baseRoute = ThrowIf.NullOrWhiteSpace(baseRoute, nameof(baseRoute));
+            _pagination = ThrowIf.Null(pagination, nameof(pagination));
+            _filterMetadata = filterMetadata ?? new NoFilterMetadata();
         }
 
         public const string HeaderName = "links";
-        public string HeaderJson => JsonConvert.SerializeObject(GetHeaderValues(), serializationSettings());
-        protected JsonSerializerSettings serializationSettings()
-            => new JsonSerializerSettings()
-            {
-                NullValueHandling = NullValueHandling.Ignore
-            };
+            
         public LinksForSerialization GetHeaderValues()
         {
-            var toReturn = new LinksForSerialization();
-            toReturn.Metadata = _metadata is null
-                ? null
-                : new LinksMetadata()
-                {
-                    Pagination = new PaginationMetadataRecord()
-                    {
-                        PageNumber = _metadata.PageNumber.ToString(CultureInfo.InvariantCulture),
-                        PageSize = _metadata.PageSize.ToString(CultureInfo.InvariantCulture),
-                        TotalRecords = _metadata.TotalRecords.ToString(CultureInfo.InvariantCulture),
-                        TotalPages = _metadata.TotalPages.ToString(CultureInfo.InvariantCulture)
-                    }
-                };
-            toReturn.Links = new LinksCollection()
+            var toReturn = new LinksForSerialization
             {
-                Operations = _operationLinks,
-                Pagination = (_metadata == null || (!_metadata.PreviousPageExists && !_metadata.NextPageExists)) && _filterMetadata == null
-                    ? null
-                    : new PaginationLinks()
+                Metadata = new LinksMetadata()
+                {
+                    Pagination = _pagination.ToSerializableValues()
+                },
+                Links = new LinksCollection()
+                {
+                    Operations = _operationLinks,
+                    Pagination = new PaginationLinks()
                     {
-                        Previous = previousPageLink,
-                        Next = nextPageLink
+                        Previous = MakeDirectionalLink(_pagination.Previous),
+                        Next = MakeDirectionalLink(_pagination.Next)
                     },
-                Related = _relationLinks
+                    Related = _relationLinks
+                }
             };
             return toReturn;
         }
 
-
-        protected string nextPageLink => _metadata.NextPageExists
-            ? _urlHelper.Link(_routeName, new { }) + FormatUrl(nextPageLinkValues())
-            : null;
-        protected string previousPageLink => _metadata.PreviousPageExists
-            ? _urlHelper.Link(_routeName, new { }) + FormatUrl(previousPageLinkValues())
-            : null;
-
-        protected virtual IEnumerable<KeyValuePair<string, string>> nextPageLinkValues()
-        {
-            var nextPageLinksValue = _metadata.NextPageLinkInfo;
-            if (_filterMetadata != null)
-            {
-                nextPageLinksValue.Concat(_filterMetadata.FilterValues());
-            }
-            return nextPageLinksValue;
-        }
-
-        protected virtual IEnumerable<KeyValuePair<string, string>> previousPageLinkValues()
-        {
-            var previousPageLinksValue = _metadata.PreviousPageLinkInfo;
-            if (_filterMetadata != null)
-            {
-                previousPageLinksValue.Concat(_filterMetadata.FilterValues());
-            }
-
-            return previousPageLinksValue;
-        }
+        protected string MakeDirectionalLink(DirectionalPaginationMetadata page)
+            => page.Exists
+                ? _baseRoute + FormatUrl(page.LinkInfo.Concat(_filterMetadata.FilterValues()))
+                : null;
 
         protected static string UrlTokenFormat(KeyValuePair<string, string> token)
             => $"{token.Key}={token.Value}";
@@ -110,13 +100,21 @@ namespace Microsoft.AspNetCore.Mvc
 {
     using Microsoft.AspNetCore.Http;
     using Sia.Core.Protocol;
+    using Newtonsoft.Json;
 
     public static class PaginationExtensions
     {
-        public static void AddLinksHeader(this IHeaderDictionary headers, LinksHeader header)
+        public static JsonSerializerSettings SerializationSettings { get; }
+            = new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            };
+        public static void AddLinksHeader(this IHeaderDictionary headers, ILinksHeader header)
         {
-            headers.Add("Access-Control-Expose-Headers", LinksHeader.HeaderName);
-            headers.Add(LinksHeader.HeaderName, header.HeaderJson);
+            var headerJson = JsonConvert.SerializeObject(header.GetHeaderValues(), SerializationSettings);
+
+            headers.Add("Access-Control-Expose-Headers", PaginatedLinksHeader.HeaderName);
+            headers.Add(PaginatedLinksHeader.HeaderName, headerJson);
         }
     }
 }

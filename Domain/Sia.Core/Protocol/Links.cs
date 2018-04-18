@@ -12,10 +12,10 @@ namespace Sia.Core.Protocol
 
     public class LinksMetadata
     {
-        public PaginationMetadataRecord Pagination { get; set; }
+        public PaginationMetadataValues Pagination { get; set; }
     }
 
-    public class PaginationMetadataRecord
+    public class PaginationMetadataValues
     {
         public string PageNumber { get; set; }
         public string PageSize { get; set; }
@@ -58,17 +58,7 @@ namespace Sia.Core.Protocol
 
     public class RelationLinks
     {
-        public RelatedChildLinks Children { get; set; }
-        public RelatedParentLinks Parent { get; set; }
-    }
-
-    public class RelatedChildLinks
-    {
-        public string Events { get; set; }
-    }
-
-    public class RelatedParentLinks
-    {
-        public string Incident { get; set; }
+        public object Children { get; set; }
+        public object Parent { get; set; }
     }
 }
