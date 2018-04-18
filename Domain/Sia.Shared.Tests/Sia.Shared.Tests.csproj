@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sia.Shared\Sia.Shared.csproj" />
+    <ProjectReference Include="..\Sia.Core\Sia.Core.csproj" />
   </ItemGroup>
 
 </Project>

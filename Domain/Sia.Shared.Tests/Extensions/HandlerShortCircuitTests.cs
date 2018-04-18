@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Sia.Gateway.Tests.TestDoubles;
 
-namespace Sia.Shared.Tests.Extensions
+namespace Sia.Core.Tests.Extensions
 {
     [TestClass]
     public class HandlerShortCircuitTests
@@ -17,7 +17,9 @@ namespace Sia.Shared.Tests.Extensions
             Task<string> ReturnMockNext() => Task.FromResult("Next result");
             var mockShortCircuit = new MockShortCircuit(shouldRequestContinue: true);
 
-            var result = await mockShortCircuit.Handle(null, new CancellationToken(), ReturnMockNext);
+            var result = await mockShortCircuit
+                .Handle(null, new CancellationToken(), ReturnMockNext)
+                .ConfigureAwait(continueOnCapturedContext: false);
 
             Assert.AreEqual(result, "Next result");
         }
@@ -27,7 +29,9 @@ namespace Sia.Shared.Tests.Extensions
         {
             var mockShortCircuit = new MockShortCircuit(shouldRequestContinue: false);
 
-            var result = await mockShortCircuit.Handle(null, new CancellationToken(), null);
+            var result = await mockShortCircuit
+                .Handle(null, new CancellationToken(), null)
+                .ConfigureAwait(continueOnCapturedContext: false);
 
             Assert.AreEqual(result, "Next was not called");
         }

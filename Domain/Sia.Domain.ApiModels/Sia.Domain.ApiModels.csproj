@@ -15,11 +15,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.DataAnnotations" Version="2.0.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.6.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Sia.Core\Sia.Core.csproj" />
     <ProjectReference Include="..\Sia.Domain\Sia.Domain.csproj" />
-    <ProjectReference Include="..\Sia.Shared\Sia.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -9,16 +9,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Sia.Shared.Tests.TestDoubles;
+using Sia.Core.Tests.TestDoubles;
 
-namespace Sia.Shared.Tests.Controllers
+namespace Sia.Core.Tests.Controllers
 {
 
     [TestClass]
     public class BaseControllerTests
     {
         [TestMethod]
-        public async Task Return_OkResultObject_OkIfFound_Input_Is_Not_Null()
+        public void Return_OkResultObject_OkIfFound_Input_Is_Not_Null()
         {
             var mockResponse = new HttpResponseMessage(HttpStatusCode.OK);
             var mockMediator = new Mock<IMediator>();
@@ -34,7 +34,7 @@ namespace Sia.Shared.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task ReturnNotFoundResultObject_OkIfFound_Input_Is_Null()
+        public void ReturnNotFoundResultObject_OkIfFound_Input_Is_Null()
         {
             var mockMediator = new Mock<IMediator>();
             var mockConfig = new Mock<DummyAzureActiveDirectoryAuthenticationInfo>();
@@ -42,7 +42,7 @@ namespace Sia.Shared.Tests.Controllers
             var controller = new StubController(mockMediator.Object, mockConfig.Object, mockUrlHelper.Object);
             var expectedResult = new NotFoundResult();
 
-            var result = controller.OkIfFound("null");
+            var result = controller.OkIfFound((object)null);
             
             Assert.IsNotNull(result);
             Assert.AreEqual(result.GetType(), expectedResult.GetType());

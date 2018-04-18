@@ -1,12 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
-using Sia.Shared.Data;
+using Sia.Core.Data;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace Sia.Shared.Tests.Data
+namespace Sia.Core.Tests.Data
 {
     [TestClass]
     public class PartialJsonResolverTests
@@ -24,8 +25,8 @@ namespace Sia.Shared.Tests.Data
 
             var result = objectUnderTest.Resolve(input, null, null, null);
 
+            Assert.AreEqual(expectedResultDataValue, result, false, CultureInfo.InvariantCulture);
 
-            Assert.AreEqual(expectedResultDataValue, result, false);
         }
 
         [TestMethod]
@@ -111,16 +112,56 @@ namespace Sia.Shared.Tests.Data
         private static JToken ExtractPropertyFromResult(object result, string propName) => ((JObject)result).Property(propName).Value;
     }
 
-    internal class JsonSerializationTestObject :IEquatable<JsonSerializationTestObject>
-    {
-        public static string ExpectedSerialization()
-            => "{\"a\":\"ValueOfA\",\"b\":1}";
-        public bool Equals(JsonSerializationTestObject other)
-            => a == other.a && b == other.b;
+#pragma warning disable CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
+#pragma warning disable CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
+    internal class JsonSerializationTestObject : IEquatable<JsonSerializationTestObject>
 
+    {
         public string a { get; set; } = "ValueOfA";
         public int b { get; set; } = 1;
+
+        public static string ExpectedSerialization()
+            => "{\"a\":\"ValueOfA\",\"b\":1}";
+
+        public static bool operator ==(JsonSerializationTestObject left, JsonSerializationTestObject right)
+        {
+            if ((object)left == null || (object)right == null)
+            {
+                return Object.Equals(left, right);
+            }
+
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(JsonSerializationTestObject left, JsonSerializationTestObject right)
+        {
+            if ((object)left == null || (object)right == null)
+            {
+                return !Object.Equals(left, right);
+            }
+
+            return !left.Equals(right);
+        }
+
+        public bool Equals(JsonSerializationTestObject other)
+            => other != null && a == other.a && b == other.b;
+
+        public override bool Equals(Object other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            var castOther = other as JsonSerializationTestObject;
+
+            return castOther != null &&
+                a == castOther.a &&
+                b == castOther.b;
+        }
     }
+#pragma warning restore CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
+#pragma warning restore CS0659 // Type overrides Object.Equals(object o) but does not override Object.GetHashCode()
 
     internal class TestHasJsonDataString : IJsonDataString
     {

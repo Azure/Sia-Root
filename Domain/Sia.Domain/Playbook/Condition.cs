@@ -1,4 +1,4 @@
-﻿using Sia.Shared.Data;
+﻿using Sia.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -35,10 +35,12 @@ namespace Sia.Domain.Playbook
         LessThan
     }
 
+#pragma warning disable CA1720 // Identifier contains type name
     public enum DataFormat
     {
         String,
         DateTime,
         Integer
     }
+#pragma warning restore CA1720 // Identifier contains type name
 }
