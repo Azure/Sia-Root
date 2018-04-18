@@ -45,7 +45,7 @@ namespace Sia.Core.Controllers
                 return NotFound();
             }
 
-            if(links != null)
+            if (links != null)
             {
                 Response.Headers.AddLinksHeader(links);
             }
@@ -58,15 +58,16 @@ namespace Sia.Core.Controllers
             Func<TResponse, ILinksHeader> getLinks
         )
         {
-            if(response == null)
+            if (response == null)
             {
                 // POST requests should result in a created record
-                // if no record is created, we have made a mistake.
+                // if no record is created, and no custom exception is raised
+                // then we have made a mistake.
                 return ServerError();
             }
 
             var links = getLinks(response);
-            if(links != null)
+            if (links != null)
             {
                 Response.Headers.AddLinksHeader(links);
             }
