@@ -16,6 +16,13 @@ namespace Sia.Core.Data
     {
         IEnumerable<KeyValuePair<string, string>> FilterValues();
     }
+
+    public class NoFilterMetadata : IFilterMetadataProvider
+    {
+        public IEnumerable<KeyValuePair<string, string>> FilterValues()
+            => Enumerable.Empty<KeyValuePair<string, string>>();
+    }
+
     public interface IFilters<T>
         : IFilterByMatch<T>,
         IFilterMetadataProvider

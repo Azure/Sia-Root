@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Sia.Core.Authentication;
+using Sia.Core.Data;
 using Sia.Core.Protocol;
+using Sia.Core.Validation;
 using Sia.Core.Validation.Filters;
 
 namespace Sia.Core.Controllers
@@ -17,8 +21,9 @@ namespace Sia.Core.Controllers
         protected readonly IMediator _mediator;
         protected readonly AzureActiveDirectoryAuthenticationInfo _authConfig;
         protected readonly IUrlHelper _urlHelper;
+        protected ILogger logger { get; set; }
 
-        protected AuthenticatedUserContext authContext => new AuthenticatedUserContext(User, HttpContext.Session, _authConfig);
+        protected AuthenticatedUserContext AuthContext => new AuthenticatedUserContext(User, HttpContext.Session, _authConfig);
 
         protected BaseController(IMediator mediator, 
             AzureActiveDirectoryAuthenticationInfo authConfig,
@@ -29,29 +34,46 @@ namespace Sia.Core.Controllers
             _urlHelper = urlHelper;
         }
 
-        public IActionResult OkIfFound<TResponse>(TResponse response)
+        public static IActionResult ServerError()
+            => new StatusCodeResult(500);
+
+        public IActionResult OkIfFound<TResponse>(TResponse response, ILinksHeader links = null)
         where TResponse : class
         {
             if (response == null)
             {
                 return NotFound();
             }
-            else
+
+            if (links != null)
             {
-                return Ok(response);
+                Response.Headers.AddLinksHeader(links);
             }
+            return Ok(response);
         }
 
-        public IActionResult OkIfAny<TResponse>(IEnumerable<TResponse> response)
+        public IActionResult CreatedIfExists<TResponse>(
+            TResponse response,
+            Func<TResponse, Uri> getRetrievalRoute,
+            Func<TResponse, ILinksHeader> getLinks
+        )
         {
             if (response == null)
             {
-                return NotFound();
+                // POST requests should result in a created record
+                // if no record is created, and no custom exception is raised
+                // then we have made a mistake.
+                return ServerError();
             }
-            else
+
+            var links = getLinks(response);
+            if (links != null)
             {
-                return Ok(response);
+                Response.Headers.AddLinksHeader(links);
             }
+
+            var retrievalRoute = getRetrievalRoute(response);
+            return Created(retrievalRoute, response);
         }
     }
 }

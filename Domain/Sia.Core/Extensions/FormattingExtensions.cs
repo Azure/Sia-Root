@@ -7,6 +7,8 @@ namespace System
         private const string integerFormat = "D";
         public static string ToPathTokenString(this long toConvert)
             => toConvert.ToString(integerFormat, CultureInfo.InvariantCulture);
+        public static string ToPathTokenString(this int toConvert)
+            => toConvert.ToString(integerFormat, CultureInfo.InvariantCulture);
     }
 
     public static class DateTimeFormattingExtensions

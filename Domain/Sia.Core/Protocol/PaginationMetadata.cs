@@ -11,22 +11,32 @@ namespace Sia.Core.Protocol
         public long TotalRecords { get; set; }
         public long TotalPages => (TotalRecords / PageSize) + (TotalRecords % PageSize > 0 ? 1 : 0);
 
-
-        public IDictionary<string, string> PreviousPageLinkInfo => new Dictionary<string, string>
+        public DirectionalPaginationMetadata Previous => new DirectionalPaginationMetadata()
         {
-            { nameof(PageNumber), (PageNumber - 1).ToString(CultureInfo.InvariantCulture) },
-            { nameof(PageSize), PageSize.ToString(CultureInfo.InvariantCulture) }
+            Exists = PageNumber > 1,
+            LinkInfo = new Dictionary<string, string>
+            {
+                { nameof(PageNumber), (PageNumber - 1).ToString(CultureInfo.InvariantCulture) },
+                { nameof(PageSize), PageSize.ToString(CultureInfo.InvariantCulture) }
+            }
         };
 
-
-        public IDictionary<string, string> NextPageLinkInfo => new Dictionary<string, string>
+        public DirectionalPaginationMetadata Next => new DirectionalPaginationMetadata()
         {
-            { nameof(PageNumber), (PageNumber + 1).ToString(CultureInfo.InvariantCulture) },
-            { nameof(PageSize), PageSize.ToString(CultureInfo.InvariantCulture) }
+            Exists = PageNumber < TotalPages,
+            LinkInfo = new Dictionary<string, string>
+            {
+                { nameof(PageNumber), (PageNumber + 1).ToString(CultureInfo.InvariantCulture) },
+                { nameof(PageSize), PageSize.ToString(CultureInfo.InvariantCulture) }
+            }
         };
 
-        public bool PreviousPageExists => PageNumber > 1;
-        public bool NextPageExists => PageNumber < TotalPages;
+    }
+
+    public class DirectionalPaginationMetadata
+    {
+        public bool Exists { get; set; }
+        public IDictionary<string, string> LinkInfo { get; set; }
     }
 }
 
@@ -39,5 +49,14 @@ namespace System.Linq
             pagination.TotalRecords = source.LongCount();
             return source.Skip((pagination.PageNumber - 1) * pagination.PageSize).Take(pagination.PageSize);
         }
+
+        public static PaginationMetadataValues ToSerializableValues(this PaginationMetadata pagination)
+            => new PaginationMetadataValues()
+            {
+                PageNumber = pagination.PageNumber.ToPathTokenString(),
+                PageSize = pagination.PageSize.ToPathTokenString(),
+                TotalRecords = pagination.TotalRecords.ToPathTokenString(),
+                TotalPages = pagination.TotalPages.ToPathTokenString()
+            };
     }
 }
