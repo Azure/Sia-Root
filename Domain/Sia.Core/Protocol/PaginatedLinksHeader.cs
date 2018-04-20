@@ -4,6 +4,7 @@
     using Sia.Core.Validation;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.Encodings.Web;
 
     public class PaginatedLinksHeader : ILinksHeader
     {
@@ -58,7 +59,7 @@
                 : null;
 
         protected static string UrlTokenFormat(KeyValuePair<string, string> token)
-            => $"{token.Key}={token.Value}";
+            => $"{UrlEncoder.Default.Encode(token.Key)}={UrlEncoder.Default.Encode(token.Value)}";
 
         protected static string FormatUrl(IEnumerable<KeyValuePair<string, string>> tokens)
             => "/?" + string.Join("&", tokens.Select(UrlTokenFormat));
