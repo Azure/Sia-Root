@@ -34,6 +34,8 @@ namespace System.Linq
     public static class FilterExtensions
     {
         public static IQueryable<T> WithFilter<T>(this IQueryable<T> source, IFilterByMatch<T> filter)
-            => source.Where(t => filter.IsMatchFor(t));
+            => filter == null
+                ? throw new ArgumentNullException(nameof(filter))
+                : source.Where(t => filter.IsMatchFor(t));
     }
 }
