@@ -24,7 +24,7 @@ namespace Sia.Core.Authentication
             try
             {
                 var secret = await GetKeyVaultClient()
-                    .GetSecretAsync(_config.Vault + _secretsEndpoint + secretName)
+                    .GetSecretAsync(_config.VaultAddressBase + _secretsEndpoint + secretName)
                     .ConfigureAwait(continueOnCapturedContext: false);
                 return secret.Value;
             }
@@ -41,7 +41,7 @@ namespace Sia.Core.Authentication
             {
                 var client = GetKeyVaultClient();
                 var cert = await client
-                    .GetCertificateAsync(_config.Vault, certificateName)
+                    .GetCertificateAsync(_config.VaultAddressBase, certificateName)
                     .ConfigureAwait(continueOnCapturedContext: false);
 
                 var secretBundle = await client
