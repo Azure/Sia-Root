@@ -36,4 +36,8 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Configuration\Sources\" />
+  </ItemGroup>
+
 </Project>
