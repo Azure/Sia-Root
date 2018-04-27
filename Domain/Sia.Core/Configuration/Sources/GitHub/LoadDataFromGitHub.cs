@@ -49,7 +49,7 @@ namespace Sia.Core.Configuration.Sources.GitHub
             GitHubRepositoryConfiguration config,
             string searchTerm
         )
-            where T: class, IEntity
+            where T: class
         {
             var repository = await GetRepositoryAsync(client, config, logger)
                 .ConfigureAwait(continueOnCapturedContext: false);
