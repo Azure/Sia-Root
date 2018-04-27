@@ -15,7 +15,7 @@ namespace Sia.Core.Configuration.Sources.GitHub
         private const string RepositoryLoadErrorMessage = "Failure to retrieve Github repository {0} with owner {1}";
 
         private static async Task<Repository> GetRepositoryAsync(
-            IGitHubClient client,
+            this IGitHubClient client,
             GitHubRepositoryConfiguration config,
             ILogger logger
         )
@@ -48,10 +48,9 @@ namespace Sia.Core.Configuration.Sources.GitHub
             ILogger logger,
             GitHubRepositoryConfiguration config,
             string searchTerm
-        )
-            where T: class
+        ) where T: class
         {
-            var repository = await GetRepositoryAsync(client, config, logger)
+            var repository = await client.GetRepositoryAsync(config, logger)
                 .ConfigureAwait(continueOnCapturedContext: false);
             var request = new SearchCodeRequest(searchTerm, config.Owner, config.Name)
             {
@@ -67,7 +66,6 @@ namespace Sia.Core.Configuration.Sources.GitHub
                 .Items
                 .Select(ExtractContents(client, repository))
                 .ToArray();
-
             Task.WaitAll(
                 recordsToAddTasks
                     .Select(taskTuple => taskTuple.contentsTask)
@@ -75,39 +73,38 @@ namespace Sia.Core.Configuration.Sources.GitHub
             );
             var recordsToAdd = recordsToAddTasks
                 .Where(taskTuple => taskTuple.contentsTask.IsCompleted && !taskTuple.contentsTask.IsFaulted)
-                .Select(taskTuple => (
-                    contents: taskTuple.contentsTask.Result,
-                    filePath: taskTuple.filePath)
+                .Select(taskTuple =>
+                    (
+                        contents: taskTuple.contentsTask.Result,
+                        filePath: taskTuple.filePath
+                    )
                 );
 
             LogFileRetrievalFailures(logger, recordsToAddTasks);
 
-            var content = recordsToAdd
+            return recordsToAdd
                 .SelectMany(DeserializeContents<T>(logger))
-                .Where(deserialized => !(deserialized.resultObject is null));
-
-            return content;
+                .Where(deserialized => !(deserialized.resultObject is null)); ;
         }
 
         private static void LogFileRetrievalFailures(ILogger logger, (Task<IReadOnlyList<RepositoryContent>> contentsTask, string filePath)[] eventTypesToAddTasks)
         {
-            foreach (var failedTask
-                in eventTypesToAddTasks
+            foreach (var (contentsTask, filePath) in eventTypesToAddTasks
                     .Where(taskTuple => !taskTuple.contentsTask.IsCompleted && !taskTuple.contentsTask.IsFaulted))
             {
-                if (failedTask.contentsTask.Exception is null)
+                if (contentsTask.Exception is null)
                 {
                     logger.LogError(
                         "Failure when trying to read file contents from {0}",
-                        new object[] { failedTask.filePath }
+                        new object[] { filePath }
                     );
                 }
                 else
                 {
                     logger.LogError(
-                        failedTask.contentsTask.Exception,
+                        contentsTask.Exception,
                         "Failure when trying to read file contents from {0}",
-                        new object[] { failedTask.filePath }
+                        new object[] { filePath }
                     );
                 }
             }
@@ -159,7 +156,10 @@ namespace Sia.Core.Configuration.Sources.GitHub
         {
             foreach (var item in toAdd)
             {
-                index.Add(item.Id, item);
+                if (!index.TryGetValue(item.Id, out var throwaway))
+                {
+                    index.Add(item.Id, item);
+                }
             }
         }
     }

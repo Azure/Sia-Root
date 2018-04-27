@@ -18,6 +18,8 @@ namespace Sia.Core.Configuration.Sources.Git
         {
             var cloneResult = config.CloneRepoFromConfig();
 
+            // TODO: fetch and pull
+
             return ((IPathConfig)config.Source).GetDataFromLocal<T>(logger);
         }
         public static CloneOptions GetGitOptions(
