@@ -52,20 +52,20 @@ namespace Sia.Core.Configuration.Sources.GitHub
     {
         public static async Task EnsureValidTokenAsync(
             this GitHubSourceConfiguration config,
-            KeyVaultConfiguration fallbackVaultConfig,
-            string tokenName
+            GitHubTokenRetrievalConfiguration fallbackVaultConfig
         )
         {
             if (string.IsNullOrWhiteSpace(config.Token))
             {
                 var keyVault = new AzureSecretVault(fallbackVaultConfig);
-                config.Token = await keyVault.Get(tokenName).ConfigureAwait(continueOnCapturedContext: false);
+                config.Token = await keyVault.Get(fallbackVaultConfig.TokenName)
+                    .ConfigureAwait(continueOnCapturedContext: false);
             }
         }
 
         public static Task EnsureValidTokenAsync(
             this GitHubConfiguration config
-        ) => config.Source.EnsureValidTokenAsync(config.TokenRetrieval, config.TokenRetrieval.TokenName);
+        ) => config.Source.EnsureValidTokenAsync(config.TokenRetrieval);
 
 
         public static IGitHubClient GetClient(
