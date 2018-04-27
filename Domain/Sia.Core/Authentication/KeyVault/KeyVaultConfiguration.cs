@@ -9,21 +9,26 @@ namespace Sia.Core.Authentication
 {
     public class KeyVaultConfiguration
     {
-        public KeyVaultConfiguration(string clientId, string clientSecret, string vault)
-        {
-            ClientId = ThrowIf.NullOrWhiteSpace(clientId, nameof(clientId));
-            ClientSecret = ThrowIf.NullOrWhiteSpace(clientSecret, nameof(clientSecret));
-            Vault = string.Format(
-                CultureInfo.InvariantCulture, 
-                secretUriBase, 
-                ThrowIf.NullOrWhiteSpace(vault, nameof(vault))
-            );
-        }
-
         private const string secretUriBase = "https://{0}.vault.azure.net";
 
-        public string Vault { get; }
-        public string ClientId { get; }
-        public string ClientSecret { get; }
+        private string vaultUri;
+        public string VaultAddressBase
+        {
+            get
+            {
+                if (vaultUri == null)
+                {
+                    vaultUri = string.Format(
+                        CultureInfo.InvariantCulture,
+                        secretUriBase,
+                        VaultName
+                    );
+                }
+                return vaultUri;
+            }
+        }
+        public string VaultName { get; set; }
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
     }
 }
