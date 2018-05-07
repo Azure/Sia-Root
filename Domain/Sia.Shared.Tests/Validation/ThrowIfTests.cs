@@ -21,29 +21,47 @@ namespace Sia.Core.Tests.Validation
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void Null_StaticMethod_WhenObjectIsNull_ThrowsArgumentNullException()
+        public void Null_StaticMethod_WhenObjectIsNull_AndCalledFromConstructor_ThrowsArgumentNullException()
         {
-            object input = null;
+#pragma warning disable CA1806 // Do not ignore method results
+            new ThrowIfTester(ThrowIfTester.Null());
+#pragma warning restore CA1806 // Do not ignore method results
 
-            var result = ThrowIf.Null(input, nameof(input));
+            //expect exception
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NullReferenceException))]
+        public void Null_StaticMethod_WhenObjectIsNull_AndCalledFromNonConstructor_ThrowsNullReferenceException()
+        {
+            ThrowIfTester.TestMe(ThrowIfTester.Null());
 
             //expect exception
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void NullOrWhiteSpace_StaticMethod_WhenInputIsNull_ThrowsArgumentException()
+        public void NullOrWhiteSpace_StaticMethod_WhenInputIsNull_AndCalledFromConstructor_ThrowsArgumentException()
         {
-            string input = null;
-
-            var result = ThrowIf.NullOrWhiteSpace(input, nameof(input));
+#pragma warning disable IDE0022 // Use expression body for methods
+            new ThrowIfTester((string)null);
+#pragma warning restore IDE0022 // Use expression body for methods
 
             //Expect exception
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void NullOrWhiteSpace_StaticMethod_WhenInputIsOnlyWhitespace_ThrowsArgumentException()
+        [ExpectedException(typeof(NullReferenceException))]
+        public void NullOrWhiteSpace_StaticMethod_WhenInputIsNull_AndCalledFromNonConstructor_ThrowsArgumentException()
+        {
+            ThrowIfTester.TestMe((string)null);
+
+            //Expect exception
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(NullReferenceException))]
+        public void NullOrWhiteSpace_StaticMethod_WhenInputIsOnlyWhitespace_ThrowsANullReferenceException()
         {
             string input = "    ";
 
@@ -60,6 +78,37 @@ namespace Sia.Core.Tests.Validation
             var result = ThrowIf.NullOrWhiteSpace(input, nameof(input));
 
             Assert.AreSame(input, result);
+        }
+    }
+
+    internal class ThrowIfTester
+    {
+        internal static ThrowIfTester Null()
+            => null;
+        internal static ThrowIfTester ValidObject()
+            => new ThrowIfTester();
+        private ThrowIfTester()
+        {
+
+        }
+        internal ThrowIfTester(string arg)
+        {
+            ThrowIf.NullOrWhiteSpace(arg, nameof(arg));
+        }
+
+        internal ThrowIfTester(ThrowIfTester otherArg)
+        {
+            ThrowIf.Null(otherArg, nameof(otherArg));
+        }
+
+        internal static void TestMe(string arg)
+        {
+            ThrowIf.NullOrWhiteSpace(arg, nameof(arg));
+        }
+
+        internal static void TestMe(ThrowIfTester otherArg)
+        {
+            ThrowIf.Null(otherArg, nameof(otherArg));
         }
     }
 }
