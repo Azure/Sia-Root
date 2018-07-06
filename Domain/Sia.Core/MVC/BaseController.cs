@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediatR;
@@ -15,7 +16,7 @@ using Sia.Core.Validation.Filters;
 namespace Sia.Core.Controllers
 {
     [Return400BadRequestWhenModelStateInvalid]
-    [Authorize()]
+    //[Authorize()]
     public abstract class BaseController : Controller
     {
         protected readonly IMediator _mediator;
@@ -43,6 +44,20 @@ namespace Sia.Core.Controllers
             if (response == null)
             {
                 return NotFound();
+            }
+
+            if (links != null)
+            {
+                Response.Headers.AddLinksHeader(links);
+            }
+            return Ok(response);
+        }
+
+        public IActionResult OkIfAny<TResponse>(IEnumerable<TResponse> response, ILinksHeader links = null)
+        {
+            if (response == null || !response.Any())
+            {
+                return ServerError();
             }
 
             if (links != null)

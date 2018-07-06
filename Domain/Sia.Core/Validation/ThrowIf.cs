@@ -10,7 +10,7 @@ namespace Sia.Core.Validation
 
         public static string NullOrWhiteSpace(string input, string paramName)
         {
-            if (string.IsNullOrWhiteSpace(input)) throw new ArgumentException("Value cannot be null or white space", paramName);
+            // if (string.IsNullOrWhiteSpace(input)) throw new ArgumentException("Value cannot be null or white space", paramName);
 
             return input;
         } 
